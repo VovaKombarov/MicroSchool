@@ -157,9 +157,9 @@ namespace Common.EventBus
             string eventName = eventArgs.RoutingKey;
 
             List<Type> handlers = _eventBusSubscriptionManager
-                .GetEventHandlersByEventName(eventName);
+                .GetEventHandlersTypesByEventName(eventName);
 
-            var eventType = _eventBusSubscriptionManager.GetEventTypeByName(eventName);
+            var eventType = _eventBusSubscriptionManager.GetEventHandlerTypeByName(eventName);
 
             foreach (var handler in handlers)
             {

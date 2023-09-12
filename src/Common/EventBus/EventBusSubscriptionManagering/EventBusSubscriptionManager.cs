@@ -1,62 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-
-namespace Common.EventBus
+﻿namespace Common.EventBus
 {
+    /// <summary>
+    /// Класс управляет подписками/отписками событий интеграции на необходимые обрработчики.
+    /// </summary>
     public class EventBusSubscriptionManager : IEventBusSubscriptionManager
     {
+        #region Fields
+
+        /// <summary>
+        /// Набор уникальных коллекций пар имя события интеграции/обработчик события интеграции.
+        /// </summary>
         private HashSet<KeyValuePair<string, Type>> _handlersSet =
             new HashSet<KeyValuePair<string, Type>>();
 
-        private List<Type> _types = new List<Type>();
-           
-        public EventBusSubscriptionManager()
-        {
+        #endregion Fields
 
-        }
+        #region Methods
 
+        /// <summary>
+        /// Добавляет подписку на событие интеграции.
+        /// </summary>
+        /// <typeparam name="T">Обощенный тип события интеграции.</typeparam>
+        /// <typeparam name="TH">Обощенный тип обработчика события интеграции.</typeparam>
         public void AddSubscription<T, TH>()
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
         {
-            var eventName = typeof(T).Name;
-            var handlerType = typeof(TH);
+            string eventName = typeof(T).Name;
+            Type handlerType = typeof(TH);
 
-            _handlersSet.Add(new KeyValuePair<string, Type>(eventName, handlerType));
-
-            if (_types.Any(w => w.Name == eventName))
-                return;
-
-            _types.Add(typeof(T));
+            _handlersSet.Add(
+                new KeyValuePair<string, Type>(eventName, handlerType)); 
         }
 
-        public List<Type> GetEventHandlersByEventName(
+        /// <summary>
+        /// Получает коллекцию типов обработчиков событий по имени события интеграции.
+        /// </summary>
+        /// <param name="eventName">Имя события интеграции.</param>
+        /// <returns>Коллекцию типов обработчиков событий по имени события интеграции.</returns>
+        public List<Type> GetEventHandlersTypesByEventName(
             string eventName)
         {
-            return _handlersSet.Where(w => w.Key == eventName)
+            return _handlersSet
+                .Where(w => w.Key == eventName)
                 .Select(w => w.Value)
                 .ToList();
         }
 
-        public Type GetEventTypeByName(string name) => 
-            _types.FirstOrDefault(w => w.Name == name);
+        /// <summary>
+        /// Получает тип обработчика событий интеграции по имени события интеграции.
+        /// </summary>
+        /// <param name="eventName">Имя события интеграции.</param>
+        /// <returns>Тип обработчика событий по имени события интеграции.</returns>
+        public Type GetEventHandlerTypeByName(string name) =>
+            _handlersSet.FirstOrDefault(w => w.Key == name).Value;
 
+        /// <summary>
+        /// Удаляет подписку.
+        /// </summary>
+        /// <typeparam name="T">Обобщенный тип события интеграции.</typeparam>
+        /// <typeparam name="TH">Обощенный тип обработчика события для события интеграции.</typeparam>
         public void RemoveSubscription<T, TH>()
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
         {
-            var eventName = typeof(T).Name;
-            var handlerType = typeof(TH);
+            string eventName = typeof(T).Name;
+            Type handlerType = typeof(TH);
 
-            _handlersSet.Remove(new KeyValuePair<string, Type>(eventName, handlerType));
+            _handlersSet.Remove(
+                new KeyValuePair<string, Type>(eventName, handlerType));
         }
 
+        /// <summary>
+        /// Очищает коллекцию обработчиков.
+        /// </summary>
         public void ClearHandlers() => _handlersSet.Clear();
+
+        #endregion Methods
     }
-        
+
 }
