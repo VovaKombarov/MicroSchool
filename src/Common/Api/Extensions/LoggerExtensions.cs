@@ -21,7 +21,7 @@ namespace Common.Api.Extensions
            IntegrationEvent @event)
         {
             logger.LogInformation(
-                $"Обработка события интеграции: {@event.Id} - {@event}");
+                  $"Обработка события интеграции: {@event.Id} - {@event}");
         }
 
         /// <summary>

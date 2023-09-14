@@ -13,6 +13,8 @@
         private HashSet<KeyValuePair<string, Type>> _handlersSet =
             new HashSet<KeyValuePair<string, Type>>();
 
+        public event EventHandler<string> OnEventRemoved;
+
         #endregion Fields
 
         #region Methods
@@ -69,6 +71,7 @@
 
             _handlersSet.Remove(
                 new KeyValuePair<string, Type>(eventName, handlerType));
+            RaiseOnEventRemoved(eventName);
         }
 
         /// <summary>
@@ -77,6 +80,12 @@
         public void ClearHandlers() => _handlersSet.Clear();
 
         #endregion Methods
+
+        private void RaiseOnEventRemoved(string eventName)
+        {
+            var handler = OnEventRemoved;
+            handler?.Invoke(this, eventName);
+        }
     }
 
 }

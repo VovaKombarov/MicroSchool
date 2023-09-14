@@ -1,107 +1,140 @@
-﻿
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Reflection;
+using System.Data.Common;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Channels;
-using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Common.EventBus
 {
+    /// <summary>
+    /// Брокер сообщений.
+    /// </summary>
     public class EventBus : IEventBus, IDisposable
     {
         #region Constants 
 
-        const string EXCHANGE = "direct_trigger";
+        /// <summary>
+        /// Имя очереди.
+        /// </summary>
+        const string EXCHANGE_NAME = "microSchool_exchange";
+
+        /// <summary>
+        /// Сообщение на случай того, если данные в конфигурации отсутствует или не заданы.
+        /// </summary>
+        const string MESSAGE_ITEM_MISSING = "Элемент отсутствует или не задан";
 
         #endregion Constants
 
         #region Fields
 
-        private readonly IConnection _connection;
-        private IModel _channel;
+        /// <summary>
+        /// Обьект содержащий набор свойств конфигурации.
+        /// </summary>
         private readonly IConfiguration _configuration;
-        private readonly IEventBusSubscriptionManager _eventBusSubscriptionManager;
-        private readonly IServiceProvider _serviceProvider;
+
+        /// <summary>
+        /// Подключение.
+        /// </summary>
+        private readonly IConnection _connection;
+
+        /// <summary>
+        /// Обьект управления подписками/отписками на события интеграции.
+        /// </summary>
+        private readonly IEventBusSubscriptionManager _subManager;
+
+        /// <summary>
+        /// Логгер.
+        /// </summary>
         private readonly ILogger<EventBus> _logger;
+
+        /// <summary>
+        /// Имя очереди.
+        /// </summary>
         private string _queueName;
+
+        private IModel _channel;
+
+        private readonly IServiceProvider _serviceProvider;
 
         #endregion Fields
 
         #region Constructors 
 
+        /// <summary>
+        /// Конструктор брокера сообщений.
+        /// </summary>
+        /// <param name="configuration">Обьект содержащий набор свойств конфигурации.</param>
+        /// <param name="subManager">Обьект управления подписками/отписками на события интеграции.</param>
+        /// <param name="serviceProvider"></param>
+        /// <param name="logger">Логгер.</param>
+        /// <exception cref="ArgumentException">Исключение возникающие при невалидном аргументе.</exception>
         public EventBus(
             IConfiguration configuration, 
-            IEventBusSubscriptionManager eventBusSubscriptionManager, 
+            IEventBusSubscriptionManager subManager, 
             IServiceProvider serviceProvider,
             ILogger<EventBus> logger)
         {
             _configuration = configuration ?? 
                 throw new ArgumentException(nameof(configuration));
-            _eventBusSubscriptionManager = eventBusSubscriptionManager ?? 
-                throw new ArgumentException(nameof(eventBusSubscriptionManager));
+            _subManager = subManager ?? 
+                throw new ArgumentException(nameof(subManager));
             _serviceProvider = serviceProvider ?? 
                 throw new ArgumentException(nameof(serviceProvider));
             _logger = logger ?? 
                 throw new ArgumentException(nameof(logger));
 
-            ConnectionFactory factory = _CreateConnectionFactory();
-
             try
             {
-                _connection = factory.CreateConnection();
-                _logger.LogInformation("Создание подключения");
-
+                ConnectionFactory factory = _CreateConnectionFactory();
+               _connection = factory.CreateConnection();
                 _CreateConsumerChannel();
-
+                _subManager.OnEventRemoved += SubManager_OnEventRemoved;
             }
             catch (Exception ex)
             {
                 _logger.LogError("Ошибка в инициализации брокера", ex);
-            } 
+            }
+            
+        }
+
+        private void SubManager_OnEventRemoved(object? sender, string eventName)
+        {
+            _channel.QueueUnbind(queue: _queueName,
+                exchange: EXCHANGE_NAME,
+                routingKey: eventName);
         }
 
         #endregion Constructors
 
         #region Utilities
 
-        private void _CreateConsumerChannel()
+        /// <summary>
+        /// Проверить данные конфигурации.
+        /// </summary>
+        /// <param name="propertyName">Имя свойства, которое проверяем в конфигурации.</param>
+        /// <exception cref="Exception">Исключение, если свойсство равно null или пустой строке.</exception>
+        private void _CheckConfigurationData(string propertyName)
         {
-            _channel = _connection.CreateModel();
-            _logger.LogInformation("Создание канала для публикации сообщений.");
-
-            _queueName = _channel.QueueDeclare(durable: true).QueueName;
-            _logger.LogInformation($"Декларирование очереди {_queueName}");
-
-            _channel.ExchangeDeclare(
-                exchange: EXCHANGE, type: ExchangeType.Direct);
-            _logger.LogInformation($"Декларирование обменника {EXCHANGE}");
-
-            _channel.CallbackException += _channel_CallbackException;
+            if (string.IsNullOrEmpty(_configuration[propertyName]))
+            {
+                _logger.LogError(MESSAGE_ITEM_MISSING + " " + propertyName);
+                throw new Exception(MESSAGE_ITEM_MISSING + " " + propertyName);
+            }
         }
 
-        private void _channel_CallbackException(object? sender, CallbackExceptionEventArgs ex)
-        {
-            _channel.Dispose();
-            _CreateConsumerChannel();
-            _logger.LogWarning(ex.Exception, "Пересоздаем канал");
-            _StartBasicConsume();
-        }
-
-
+        /// <summary>
+        /// Создать фабрику для создания подключения.
+        /// </summary>
+        /// <returns>Обьект фабричного класса для создания подключения.</returns>
         private ConnectionFactory _CreateConnectionFactory()
         {
+            _CheckConfigurationData("RabbitMQHost");
+            _CheckConfigurationData("RabbitMQPort");
+
             return new ConnectionFactory()
             {
                 HostName = _configuration["RabbitMQHost"],
@@ -110,29 +143,48 @@ namespace Common.EventBus
             };
         }
 
-        private void _SendMessage(IntegrationEvent @event)
+        /// <summary>
+        /// Создать канал получения.
+        /// Важные аспекты.
+        /// 1)durable: true. Очередь выдержит перезапуск сервера RabbitMQ.
+        /// 2)prefetchCount: 1. Не отправлять новое сообщение, пока не подтверждено предыдущее.
+        /// </summary>
+        private void _CreateConsumerChannel()
         {
-            var eventName = @event.GetType().Name;
+            _logger.LogInformation("Создание канала получения.");
 
-            var body = JsonSerializer.SerializeToUtf8Bytes(
-                @event, @event.GetType(), new JsonSerializerOptions
-                {
-                    WriteIndented = true
-                });
+            _channel = _connection.CreateModel();
+           
+            _queueName = _channel.QueueDeclare(durable: true).QueueName;
 
-            var properties = _channel.CreateBasicProperties();
-            properties.Persistent = true;
-            _logger.LogInformation($"Флаг для сообщений - постоянные");
+            _channel.BasicQos(prefetchSize: 0, prefetchCount: 1, global: false);
 
-            _channel.BasicPublish(
-                exchange: EXCHANGE,
-                routingKey: eventName,
-                basicProperties: properties,
-                body: body);
+            _channel.ExchangeDeclare(
+                exchange: EXCHANGE_NAME, type: ExchangeType.Direct);
 
-            _logger.LogInformation($"Публикация сообщения  {eventName}");
+            _channel.CallbackException += _channel_CallbackException;
         }
 
+        /// <summary>
+        /// Обработчик события CallbackException в канале.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="ex"></param>
+        private void _channel_CallbackException(object? sender, CallbackExceptionEventArgs ex)
+        {
+            _logger.LogWarning(ex.Exception, "Пересоздаем канал");
+            _channel.Dispose();
+            _CreateConsumerChannel();
+            _StartBasicConsume();
+        }
+
+        /// <summary>
+        /// Создание получателя.
+        /// Создаем получателя в двух случаях.
+        /// 1) Регистрация получателя по подписке. 
+        /// Для каждого события интеграции, регистрируем получателя.
+        /// 2) При возникновении исключение в канале.
+        /// </summary>
         private void _StartBasicConsume()
         {
             _logger.LogTrace("Создание получателя");
@@ -149,17 +201,22 @@ namespace Common.EventBus
             {
                 _logger.LogError("Канал равен null");
             }
-
         }
 
+        /// <summary>
+        /// Событие возникает, когда доставка доставлена потребителю.
+        /// </summary>
+        /// <param name="sender">Отправитель.</param>
+        /// <param name="eventArgs">Аргументы содержащие дополнительную информацию.</param>
+        /// <returns>Результат выполнения асинхронной операции.</returns>
         private async Task _Consumer_Received(object sender, BasicDeliverEventArgs eventArgs)
         {
             string eventName = eventArgs.RoutingKey;
 
-            List<Type> handlers = _eventBusSubscriptionManager
+            List<Type> handlers = _subManager
                 .GetEventHandlersTypesByEventName(eventName);
 
-            var eventType = _eventBusSubscriptionManager.GetEventHandlerTypeByName(eventName);
+            var eventType = _subManager.GetEventHandlerTypeByName(eventName);
 
             foreach (var handler in handlers)
             {
@@ -180,9 +237,9 @@ namespace Common.EventBus
             {
                 var integrationEvent = JsonSerializer.Deserialize(
                     message, eventType, new JsonSerializerOptions()
-               {
-                   PropertyNameCaseInsensitive = true
-               });
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
 
                 var handler = scope.ServiceProvider.GetService(eventHadlerType);
 
@@ -199,10 +256,37 @@ namespace Common.EventBus
             }
         }
 
+        private void _SendMessage(IntegrationEvent @event)
+        {
+            var eventName = @event.GetType().Name;
+
+            var body = JsonSerializer.SerializeToUtf8Bytes(
+                @event, @event.GetType(), new JsonSerializerOptions
+                {
+                    WriteIndented = true
+                });
+
+            var properties = _channel.CreateBasicProperties();
+            properties.Persistent = true;
+            _logger.LogInformation($"Флаг для сообщений - постоянные");
+
+            _channel.BasicPublish(
+                exchange: EXCHANGE_NAME,
+                routingKey: eventName,
+                basicProperties: properties,
+                body: body);
+
+            _logger.LogInformation($"Публикация сообщения  {eventName}");
+        }
+
         #endregion Utilities
 
         #region Methods
 
+        /// <summary>
+        /// Публикация события интеграции.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
         public void Publish(IntegrationEvent @event) 
         {
             if (_connection.IsOpen)
@@ -215,29 +299,47 @@ namespace Common.EventBus
             }
         }
 
+        /// <summary>
+        /// Подписка обработчиков событий интеграции на событие интеграции.
+        /// </summary>
+        /// <typeparam name="T">Обобщенный тип события интеграции.</typeparam>
+        /// <typeparam name="TH">Обощенный тип обработчика события интеграции.</typeparam>
         public void Subscribe<T, TH>()
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
         {
-            _eventBusSubscriptionManager.AddSubscription<T, TH>();
-            _logger.LogInformation("Добавление подписок");
+            _subManager.AddSubscription<T, TH>();
 
-            _channel.QueueBind(queue: _queueName,
-                      exchange: EXCHANGE,
-                      routingKey: typeof(T).Name);
-            _logger.LogInformation($"Связывание очереди по нужному ключу маршрутизации {typeof(T).Name} " );
+            _logger.LogInformation(
+                "Подписка на событие {EventName} обработчика {EventHandler}", 
+                typeof(T).Name, 
+                typeof(TH).Name);
+
+            _channel.QueueBind(
+                queue: _queueName,
+                exchange: EXCHANGE_NAME,
+                routingKey: typeof(T).Name);
 
             _StartBasicConsume();
         }
 
+        /// <summary>
+        /// Отписка обработчика события интеграции от события интеграции.
+        /// </summary>
+        /// <typeparam name="T">Обощенный тип события интеграции.</typeparam>
+        /// <typeparam name="TH">Обобщенный тип обработчика события интеграции.</typeparam>
         public void UnSubscribe<T, TH>()
            where T : IntegrationEvent
            where TH : IIntegrationEventHandler<T>
         {
-            _eventBusSubscriptionManager.RemoveSubscription<T, TH>();
-            _logger.LogTrace("Удаление подписок");
+            _subManager.RemoveSubscription<T, TH>();
+            _logger.LogInformation(
+               "Удаление подписки на событие {EventName} обработчика {EventHandler}", typeof(T), typeof(TH));
         }
 
+        /// <summary>
+        /// Освобождение неуправляемых ресурсов.
+        /// </summary>
         public void Dispose()
         {
             if (_channel != null)

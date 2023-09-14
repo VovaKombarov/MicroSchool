@@ -43,5 +43,8 @@
         /// Очищает коллекцию обработчиков.
         /// </summary>
         public void ClearHandlers();
+
+
+        event EventHandler<string> OnEventRemoved;
     }
 }
