@@ -3,10 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System.Data.Common;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Channels;
 
 namespace Common.EventBus
 {
@@ -56,8 +54,14 @@ namespace Common.EventBus
         /// </summary>
         private string _queueName;
 
+        /// <summary>
+        /// Канал.
+        /// </summary>
         private IModel _channel;
 
+        /// <summary>
+        /// Обьект предоставляющий доступ к сервисам.
+        /// </summary>
         private readonly IServiceProvider _serviceProvider;
 
         #endregion Fields
@@ -69,7 +73,7 @@ namespace Common.EventBus
         /// </summary>
         /// <param name="configuration">Обьект содержащий набор свойств конфигурации.</param>
         /// <param name="subManager">Обьект управления подписками/отписками на события интеграции.</param>
-        /// <param name="serviceProvider"></param>
+        /// <param name="serviceProvider">Обьект предоставляющий доступ к сервисам.</param>
         /// <param name="logger">Логгер.</param>
         /// <exception cref="ArgumentException">Исключение возникающие при невалидном аргументе.</exception>
         public EventBus(
@@ -101,23 +105,32 @@ namespace Common.EventBus
             
         }
 
-        private void SubManager_OnEventRemoved(object? sender, string eventName)
-        {
-            _channel.QueueUnbind(queue: _queueName,
-                exchange: EXCHANGE_NAME,
-                routingKey: eventName);
-        }
-
         #endregion Constructors
 
         #region Utilities
+
+        /// <summary>
+        /// Обработчик события отписки от события интеграции.
+        /// </summary>
+        /// <param name="sender">Отправитель.</param>
+        /// <param name="eventName">Имя события.</param>
+        private void SubManager_OnEventRemoved(object? sender, string eventName)
+        {
+            if(_channel != null)
+            {
+                _channel.QueueUnbind(
+                   queue: _queueName,
+                   exchange: EXCHANGE_NAME,
+                   routingKey: eventName);
+            } 
+        }
 
         /// <summary>
         /// Проверить данные конфигурации.
         /// </summary>
         /// <param name="propertyName">Имя свойства, которое проверяем в конфигурации.</param>
         /// <exception cref="Exception">Исключение, если свойсство равно null или пустой строке.</exception>
-        private void _CheckConfigurationData(string propertyName)
+        private void  _CheckConfigurationData(string propertyName)
         {
             if (string.IsNullOrEmpty(_configuration[propertyName]))
             {
@@ -228,7 +241,13 @@ namespace Common.EventBus
             _logger.LogInformation("Подтверждение доставки сообщения.");
         }
 
-
+        /// <summary>
+        /// Вызов обработчика события интеграции.
+        /// </summary>
+        /// <param name="message">Сообщение.</param>
+        /// <param name="eventType">Тип сообщения.</param>
+        /// <param name="eventHadlerType">Тип обработчика сообщения.</param>
+        /// <returns>Результат выполения операции.</returns>
         private async Task _InvokeHandle(string message, Type eventType, Type eventHadlerType)
         {
             await using var scope = _serviceProvider.CreateAsyncScope();
@@ -243,22 +262,29 @@ namespace Common.EventBus
 
                 var handler = scope.ServiceProvider.GetService(eventHadlerType);
 
-                string str = string.Empty;
+                Type concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
 
-                var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
+                // Переключаем контекст и гарантируем, что оставшаяся часть метода выполниться в текущем контексте синхронизации
                 await Task.Yield();
                 await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent });
 
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Ошибка при выполнении метода Handle {eventType} {eventHadlerType} ", ex);
+                _logger.LogError(
+                    $"Ошибка при выполнении метода Handle {eventType} {eventHadlerType} ", ex);
             }
         }
 
+        /// <summary>
+        /// Отправка сообщения.
+        /// Важное свойство properties.Persistent = true;
+        /// Гарантируем, что сообщения не будут потеряны в случае остановки сервера 
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
         private void _SendMessage(IntegrationEvent @event)
         {
-            var eventName = @event.GetType().Name;
+            string eventName = @event.GetType().Name;
 
             var body = JsonSerializer.SerializeToUtf8Bytes(
                 @event, @event.GetType(), new JsonSerializerOptions
@@ -268,7 +294,6 @@ namespace Common.EventBus
 
             var properties = _channel.CreateBasicProperties();
             properties.Persistent = true;
-            _logger.LogInformation($"Флаг для сообщений - постоянные");
 
             _channel.BasicPublish(
                 exchange: EXCHANGE_NAME,
@@ -333,6 +358,7 @@ namespace Common.EventBus
            where TH : IIntegrationEventHandler<T>
         {
             _subManager.RemoveSubscription<T, TH>();
+            
             _logger.LogInformation(
                "Удаление подписки на событие {EventName} обработчика {EventHandler}", typeof(T), typeof(TH));
         }

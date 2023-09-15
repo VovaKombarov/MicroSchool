@@ -13,9 +13,35 @@
         private HashSet<KeyValuePair<string, Type>> _handlersSet =
             new HashSet<KeyValuePair<string, Type>>();
 
-        public event EventHandler<string> OnEventRemoved;
+        /// <summary>
+        /// Коллекция типов интеграции.
+        /// </summary>
+        private List<Type> _integrationEventTypes = new List<Type>();
 
         #endregion Fields
+
+        #region Events 
+
+        /// <summary>
+        /// Событие на удаление подписки.
+        /// </summary>
+        public event EventHandler<string> OnEventRemoved;
+
+        #endregion Events
+
+        #region Utilities
+
+        /// <summary>
+        /// Поднять событие удаление подписки.
+        /// </summary>
+        /// <param name="eventName">Имя события.</param>
+        private void RaiseOnEventRemoved(string eventName)
+        {
+            var handler = OnEventRemoved;
+            handler?.Invoke(this, eventName);
+        }
+
+        #endregion Utilities
 
         #region Methods
 
@@ -32,7 +58,8 @@
             Type handlerType = typeof(TH);
 
             _handlersSet.Add(
-                new KeyValuePair<string, Type>(eventName, handlerType)); 
+                new KeyValuePair<string, Type>(eventName, handlerType));
+            _integrationEventTypes.Add(typeof(T));
         }
 
         /// <summary>
@@ -50,12 +77,12 @@
         }
 
         /// <summary>
-        /// Получает тип обработчика событий интеграции по имени события интеграции.
+        /// Получает тип события интеграции по имени события интеграции.
         /// </summary>
         /// <param name="eventName">Имя события интеграции.</param>
         /// <returns>Тип обработчика событий по имени события интеграции.</returns>
         public Type GetEventHandlerTypeByName(string name) =>
-            _handlersSet.FirstOrDefault(w => w.Key == name).Value;
+            _integrationEventTypes.Where(w => w.Name == name).FirstOrDefault();
 
         /// <summary>
         /// Удаляет подписку.
@@ -71,6 +98,7 @@
 
             _handlersSet.Remove(
                 new KeyValuePair<string, Type>(eventName, handlerType));
+            _integrationEventTypes.Remove(typeof(T));
             RaiseOnEventRemoved(eventName);
         }
 
@@ -81,11 +109,5 @@
 
         #endregion Methods
 
-        private void RaiseOnEventRemoved(string eventName)
-        {
-            var handler = OnEventRemoved;
-            handler?.Invoke(this, eventName);
-        }
     }
-
 }

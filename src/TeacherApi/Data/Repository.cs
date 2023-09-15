@@ -65,7 +65,7 @@ namespace TeacherApi.Data
         {
             IQueryable<T> query = _BuildQueryOnSpecification(specification);
 
-            return await query.Where(specification.Criteria).AsNoTracking().ToListAsync();
+            return await query.Where(specification.Criteria).ToListAsync();
         }
 
         public async Task AddAsync(T entity)

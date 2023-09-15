@@ -44,7 +44,9 @@
         /// </summary>
         public void ClearHandlers();
 
-
+        /// <summary>
+        /// Событие на удаление подписки.
+        /// </summary>
         event EventHandler<string> OnEventRemoved;
     }
 }
