@@ -16,7 +16,7 @@ namespace Common.EventBus
         #region Constants 
 
         /// <summary>
-        /// Имя очереди.
+        /// Имя обменника.
         /// </summary>
         const string EXCHANGE_NAME = "microSchool_exchange";
 

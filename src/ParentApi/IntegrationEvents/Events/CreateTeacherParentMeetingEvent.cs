@@ -3,25 +3,49 @@ using Common.EventBus;
 
 namespace ParentApi.IntegrationEvents
 {
-
-    // Integration Events notes: 
-    // An Event is “something that has happened in the past”, therefore its name has to be past tense
-    // An Integration Event is an event that can cause side effects to other microservices, Bounded-Contexts or external systems.
     /// <summary>
-    /// Событие интеграции по сути представляет собой класс для хранения данных.
+    /// Событие создания встречи учителя и родителя.
     /// </summary>
     public class CreateTeacherParentMeetingEvent : IntegrationEvent
     {
-        public int ParentId { get; }
+        #region Properties
 
-        public int TeacherId { get; }
-
-        public int StudentId { get; }
-
-        public DateTime MeetingDT { get; }
-
+        /// <summary>
+        /// Наименование события.
+        /// </summary>
         public string Name => typeof(CreateTeacherParentMeetingEvent).Name;
 
+        /// <summary>
+        /// Идентификатор родителя.
+        /// </summary>
+        public int ParentId { get; }
+
+        /// <summary>
+        /// Идентификатор учителя.
+        /// </summary>
+        public int TeacherId { get; }
+
+        /// <summary>
+        /// Идентификатор студента.
+        /// </summary>
+        public int StudentId { get; }
+
+        /// <summary>
+        /// Время митинга.
+        /// </summary>
+        public DateTime MeetingDT { get; }
+
+        #endregion Properties
+
+        #region Constructors
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="parentId">Идентификатор родителя.</param>
+        /// <param name="teacherId">Идентификатор учителя.</param>
+        /// <param name="studentId">Идентификатор студента.</param>
+        /// <param name="meetingDT">Время митинга.</param>
         public CreateTeacherParentMeetingEvent(
             int parentId, 
             int teacherId, 
@@ -33,5 +57,7 @@ namespace ParentApi.IntegrationEvents
             StudentId = studentId;
             MeetingDT = meetingDT;
         }
+
+        #endregion Constructors
     }
 }
