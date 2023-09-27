@@ -158,9 +158,8 @@ namespace Common.EventBus
 
         /// <summary>
         /// Создать канал получения.
-        /// Важные аспекты.
-        /// 1)durable: true. Очередь выдержит перезапуск сервера RabbitMQ.
-        /// 2)prefetchCount: 1. Не отправлять новое сообщение, пока не подтверждено предыдущее.
+        /// durable: true. Очередь выдержит перезапуск сервера RabbitMQ.
+        /// prefetchCount: Не отправлять новое сообщение, пока не подтверждено предыдущее.
         /// </summary>
         private void _CreateConsumerChannel()
         {

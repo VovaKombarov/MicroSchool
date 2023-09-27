@@ -2,12 +2,25 @@
 
 namespace TeacherApi.Data.Specifications
 {
-    public class HomeworkProgressStatusSpecification : BaseSpecification<HomeworkProgressStatus>
+    /// <summary>
+    /// Спецификация статуса прогресса домашней работы.
+    /// </summary>
+    public class HomeworkProgressStatusSpecification : 
+        BaseSpecification<HomeworkProgressStatus>
     {
-        public HomeworkProgressStatusSpecification(int studentInLessonId) : 
-            base(x => x.StudentInLesson.Id == studentInLessonId)
+        #region Constructors 
+
+        /// <summary>
+        /// Получает статус прогресса домашней работы по идентификатору студента на уроке.
+        /// </summary>
+        /// <param name="studentInLessonId">Идентификатор студента на уроке.</param>
+        public HomeworkProgressStatusSpecification(int studentInLessonId) :
+           base(x => x.StudentInLesson.Id == studentInLessonId)
         {
 
         }
+
+        #endregion Constructors
+
     }
 }

@@ -2,12 +2,23 @@
 
 namespace TeacherApi.Data.Specifications
 {
+    /// <summary>
+    /// Спецификация для готовой домашней работы.
+    /// </summary>
     public class CompletedHomeworkSpecification : BaseSpecification<CompletedHomework>
     {
-        public CompletedHomeworkSpecification(int studentInLessonId) 
-            : base(w => w.StudentInLesson.Id == studentInLessonId)  
-        { 
+        #region Constructors 
+
+        /// <summary>
+        /// Получает готовую домашнюю работу по идентификатору студента на уроке.
+        /// </summary>
+        /// <param name="studentInLessonId">Идентификатор студента на уроке.</param>
+        public CompletedHomeworkSpecification(int studentInLessonId)
+          : base(w => w.StudentInLesson.Id == studentInLessonId)
+        {
 
         }
+
+        #endregion Constructors
     }
 }

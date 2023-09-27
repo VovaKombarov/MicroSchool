@@ -2,11 +2,23 @@
 
 namespace TeacherApi.Data.Specifications
 {
+    /// <summary>
+    /// Спецификация учителя.
+    /// </summary>
     public class TeacherSpecification : BaseSpecification<Teacher>
     {
-        public TeacherSpecification(int teacherId) : base(w => w.Id == teacherId)
+        #region Constructors 
+
+        /// <summary>
+        /// Получает учителя по идентификатору.
+        /// </summary>
+        /// <param name="teacherId">Идентификатор учителя.</param>
+        public TeacherSpecification(int teacherId) : 
+            base(w => w.Id == teacherId)
         {
 
         }
+
+        #endregion Constructors
     }
 }
