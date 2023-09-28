@@ -11,6 +11,8 @@ namespace ParentApi.Models
     [Table("teachersparentsmeetings", Schema = "skool")]
     public class TeacherParentMeeting : EntityBase
     {
+        #region Properties
+
         /// <summary>
         /// Идентификатор.
         /// </summary>
@@ -52,6 +54,8 @@ namespace ParentApi.Models
         /// </summary>
         [Required]
         public bool TeacherInitiative { get; set; }
+
+        #endregion Properties
     }
 
 }

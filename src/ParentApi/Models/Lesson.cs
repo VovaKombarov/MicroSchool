@@ -11,6 +11,8 @@ namespace ParentApi.Models
     [Table("lessons", Schema = "skool")]
     public class Lesson : EntityBase
     {
+        #region Properties
+
         /// <summary>
         /// Идентификатор урока.
         /// </summary>
@@ -36,5 +38,6 @@ namespace ParentApi.Models
         [Required]
         public string Theme { get; set; }
 
+        #endregion Properties 
     }
 }

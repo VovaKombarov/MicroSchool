@@ -10,6 +10,8 @@ namespace ParentApi.Models
     [Table("studentsinlessons", Schema = "skool")]
     public class StudentInLesson : EntityBase
     {
+        #region Properties
+
         /// <summary>
         /// Идентификатор студента на уроке.
         /// </summary>
@@ -38,5 +40,7 @@ namespace ParentApi.Models
         /// Оценка полученная на уроке.
         /// </summary>
         public int? Grade { get; set; }
+
+        #endregion Properties
     }
 }

@@ -11,6 +11,8 @@ namespace ParentApi.Models
     [Table("homeworkprogressstatuses", Schema = "skool")]
     public class HomeworkProgressStatus : EntityBase
     {
+        #region Properties
+
         /// <summary>
         /// Идентификатор прогресса домашней работы.
         /// </summary>
@@ -35,6 +37,8 @@ namespace ParentApi.Models
         /// </summary>
         [Required]
         public HomeworkStatus HomeworkStatus { get; set; }
+
+        #endregion Properties
 
     }
 }

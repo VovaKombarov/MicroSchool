@@ -10,6 +10,8 @@ namespace ParentApi.Models
     [Table("subjects", Schema = "skool")]
     public class Subject : EntityBase
     {
+        #region Properties
+
         /// <summary>
         /// Идентификатор предмета.
         /// </summary>
@@ -22,5 +24,7 @@ namespace ParentApi.Models
         /// </summary>
         [Required]
         public string SubjectName { get; set; }
+
+        #endregion Properties
     }
 }

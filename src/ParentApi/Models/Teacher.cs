@@ -10,6 +10,8 @@ namespace ParentApi.Models
     [Table("teachers", Schema = "skool")]
     public class Teacher : EntityBase
     {
+        #region Properties
+
         /// <summary>
         /// Идентификатор учителя.
         /// </summary>
@@ -34,6 +36,8 @@ namespace ParentApi.Models
         /// </summary>
         [Required]
         public string Surname { get; set; }
+
+        #endregion Properties
 
     }
 }

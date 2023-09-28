@@ -4,16 +4,28 @@ using TeacherApi.Data;
 
 namespace TeacherApi.Models
 {
-    [Table("Classes", Schema = "skool")]
+    /// <summary>
+    /// Класс.
+    /// </summary>
+    [Table("classes", Schema = "skool")]
     public class Class : EntityBase
     {
+        /// <summary>
+        /// Идентификатор класса.
+        /// </summary>
         [Key]
         [Required]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Номер класса.
+        /// </summary>
         [Required]
         public int Number { get; set; }
 
+        /// <summary>
+        /// Буква класса.
+        /// </summary>
         [Required]
         public char Letter { get; set; }
     }

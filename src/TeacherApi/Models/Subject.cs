@@ -11,11 +11,21 @@ namespace TeacherApi.Models
     [Table("Subjects", Schema = "skool")]
     public class Subject : EntityBase
     {
+        #region Properties
+
+        /// <summary>
+        /// Идентификатор предмета.
+        /// </summary>
         [Key]
         [Required]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Имя предмета.
+        /// </summary>
         [Required]
         public string SubjectName { get; set; }
+
+        #endregion Properties
     }
 }

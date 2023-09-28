@@ -1,21 +1,51 @@
 ﻿using Common.EventBus;
 using System;
-using System.Reflection;
 
 namespace TeacherApi.IntegrationEvents
 {
+    /// <summary>
+    /// Событие создания встречи учителя и родителя.
+    /// </summary>
     public class CreateTeacherParentMeetingEvent : IntegrationEvent
     {
-        public int TeacherId { get; }
+        #region Properties 
 
-        public int ParentId { get; }
-
-        public int StudentId { get; }
-
-        public DateTime MeetingDT { get; }
-
+        /// <summary>
+        /// Наименование события.
+        /// </summary>
         public string Name => typeof(CreateTeacherParentMeetingEvent).Name;
 
+        /// <summary>
+        /// Идентификатор учителя.
+        /// </summary>
+        public int TeacherId { get; }
+
+        /// <summary>
+        /// Идентификатор родителя.
+        /// </summary>
+        public int ParentId { get; }
+
+        /// <summary>
+        /// Идентификатор студента.
+        /// </summary>
+        public int StudentId { get; }
+
+        /// <summary>
+        /// Время митинга.
+        /// </summary>
+        public DateTime MeetingDT { get; }
+
+        #endregion Properties
+
+        #region Constructors 
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="teacherId">Идентификатор учителя.</param>
+        /// <param name="parentId">Идентификатор родителя.</param>
+        /// <param name="studentId">Идентификатор студента.</param>
+        /// <param name="meetingDT">Время митинга.</param>
         public CreateTeacherParentMeetingEvent(int teacherId, int parentId, int studentId, DateTime meetingDT)
         {
             TeacherId = teacherId;
@@ -23,5 +53,7 @@ namespace TeacherApi.IntegrationEvents
             StudentId = studentId;
             MeetingDT = meetingDT;
         }
+
+        #endregion Constructors
     }
 }

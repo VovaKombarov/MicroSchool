@@ -11,6 +11,8 @@ namespace ParentApi.Models
     [Table("homeworks", Schema = "skool")]
     public class Homework : EntityBase
     {
+        #region Properties
+
         /// <summary>
         /// Идентификатор домашней работы.
         /// </summary>
@@ -41,5 +43,7 @@ namespace ParentApi.Models
         /// </summary>
         [Required]
         public string Howework { get; set; }
+
+        #endregion Properties
     }
 }
