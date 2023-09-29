@@ -178,36 +178,66 @@ namespace TeacherApi.Services
 
         #region Methods
 
+        /// <summary>
+        /// Асинхронное проверка существования класса.
+        /// </summary>
+        /// <param name="classId">Идентификатор класса.</param>
+        /// <returns>Класс.</returns>
         public async Task<Class> ClassExistsAsync(int classId)
         {
             return await _classRepo.GetItemAsync(
                 new ClassSpecification(classId));
         }
 
-        public async Task<Lesson> LessonExistsAsync(int lessonId)
-        {
-            return await _lessonRepo.GetItemAsync(
-                new LessonSpecification(lessonId));
-        }
-
+        /// <summary>
+        /// Асинхронное проверка существования студента.
+        /// </summary>
+        /// <param name="studentId">Идентификатор студента.</param>
+        /// <returns>Студент.</returns>
         public async Task<Student> StudentExistsAsync(int studentId)
         {
             return await _studentRepo.GetItemAsync(
                 new StudentSpecification(studentId));
         }
 
+        /// <summary>
+        /// Асинхронное проверка существования учителя.
+        /// </summary>
+        /// <param name="teacherId">Идентификатор учителя.</param>
+        /// <returns>Учитель.</returns>
+        public async Task<Teacher> TeacherExistsAsync(int teacherId)
+        {
+            return await _teacherRepo.GetItemAsync(
+                new TeacherSpecification(teacherId));
+        }
+
+        /// <summary>
+        /// Асинхронное проверка существования предмета.
+        /// </summary>
+        /// <param name="subjectId">Идентификатор предмета.</param>
+        /// <returns>Предмет.</returns>
+        public async Task<Subject> SubjectExistsAsync(int subjectId)
+        {
+            return await _subjectRepo.GetItemAsync(
+                new SubjectSpecification(subjectId));
+        }
+
+        /// <summary>
+        /// Асинхронное проверка существования родителя.
+        /// </summary>
+        /// <param name="parentId">Идентификатор родителя.</param>
+        /// <returns>Родитель.</returns>
         public async Task<Parent> ParentExistsAsync(int parentId)
         {
             return await _parentRepo.GetItemAsync(
                 new ParentSpecification(parentId));
         }
 
-        public async Task<HomeworkStatus> HomeworkStatusExistsAsync(int homeworkStatusId)
-        {
-            return await _homeWorkStatusRepo.GetItemAsync(
-                new HomeworkStatusSpecification(homeworkStatusId));
-        }
-
+        /// <summary>
+        /// Асинхронное проверка существования встречи родителя и учителя.
+        /// </summary>
+        /// <param name="teacherParentMeetingId">Идентификатор встречи родителя и учителя.</param>
+        /// <returns>Встреча родителя и учителя.</returns>
         public async Task<TeacherParentMeeting> TeacherParentMeetingExists(
           int teacherParentMeetingId)
         {
@@ -215,63 +245,46 @@ namespace TeacherApi.Services
                 new TeacherParentMeetingSpecification(teacherParentMeetingId));
         }
 
-        public async Task<List<Student>> GetStudentsByClassIdAsync(int classId)
+        /// <summary>
+        /// Асинхронное проверка существования статуса домашней работы.
+        /// </summary>
+        /// <param name="homeworkStatusId">Идентификатор статуса домашней работы.</param>
+        /// <returns>Статус домашней работы.</returns>
+        public async Task<HomeworkStatus> HomeworkStatusExistsAsync(int homeworkStatusId)
         {
-            return await _studentRepo.GetListAsync(
-                new StudentsSpecification(classId));
+            return await _homeWorkStatusRepo.GetItemAsync(
+                new HomeworkStatusSpecification(homeworkStatusId));
         }
 
-        public async Task<List<Parent>> GetParentsByStudentIdAsync(int studentId)
+        /// <summary>
+        /// Асинхронное проверка существования урока.
+        /// </summary>
+        /// <param name="lessonId">Идентификатор урока.</param>
+        /// <returns>Урок.</returns>
+        public async Task<Lesson> LessonExistsAsync(int lessonId)
         {
-            return await _parentRepo.GetListAsync(
-                new ParentsSpecification(studentId));
+            return await _lessonRepo.GetItemAsync(
+                new LessonSpecification(lessonId));
         }
 
-        public async Task<StudentInLesson> StudentInLessonExistsAsync(
-            int studentId, int lessonId)
-        {
-            return await _studentInLessonRepo.GetItemAsync(
-                new StudentInLessonSpecification(studentId, lessonId));
-        }
-
+        /// <summary>
+        /// Асинхронное проверка существования домашней работы.
+        /// </summary>
+        /// <param name="homeworkId">Идентификатор домашней работы.</param>
+        /// <returns>Домашняя работа.</returns>
         public async Task<Homework> HomeworkExistsAsync(int homeworkId)
         {
             return await _homeworkRepo.GetItemAsync(
                 new HomeworkSpecification(homeworkId));
         }
 
-        public async Task<HomeworkProgressStatus> GetHomeworkProgressStatusAsync(
-            int studentInLessonId)
-        {
-            return await _homeworkProgressStatusRepo.GetItemAsync(
-                new HomeworkProgressStatusSpecification(studentInLessonId));
-        }
-
-        public async Task<CompletedHomework> GetCompletedHomeworkByStudentInLessonIdAsync(
-            int studentInLessonId)
-        {
-            return await _completedHomeworkRepo.GetItemAsync(
-                new CompletedHomeworkSpecification(studentInLessonId));
-        }
-
-        public async Task<Teacher> TeacherExistsAsync(int teacherId)
-        {
-            return await _teacherRepo.GetItemAsync(
-                new TeacherSpecification(teacherId));
-        }
-
-        public async Task<Subject> SubjectExistsAsync(int subjectId)
-        {
-            return await _subjectRepo.GetItemAsync(
-                new SubjectSpecification(subjectId));   
-        }
-
-        public async Task<Homework> HomeworkExistsByLessonIdAsync(int lessonId)
-        {
-            return await _homeworkRepo.GetItemAsync(
-                new HomeworkSpecificationByLesson(lessonId));
-        }
-
+        /// <summary>
+        /// Асинхронное проверка обьекта учитель/класс/предмет.
+        /// </summary>
+        /// <param name="teacherId">Идентификатор учителя.</param>
+        /// <param name="classId">Идентификатор класса.</param>
+        /// <param name="subjectId">Идентификатор предмета.</param>
+        /// <returns>обьекта учитель/класс/предмет.</returns>
         public async Task<TeacherClassSubject> TeacherClassSubjectExistsAsync(
             int teacherId,
             int classId,
@@ -281,6 +294,86 @@ namespace TeacherApi.Services
                 new TeacherClassSubjectSpecification(teacherId, classId, subjectId));
         }
 
+        /// <summary>
+        /// Асинхронное проверка студента на уроке.
+        /// </summary>
+        /// <param name="studentId">Идентификатор студента.</param>
+        /// <param name="lessonId">Идентификатор урока.</param>
+        /// <returns>Студента на уроке.</returns>
+        public async Task<StudentInLesson> StudentInLessonExistsAsync(
+            int studentId, int lessonId)
+        {
+            return await _studentInLessonRepo.GetItemAsync(
+                new StudentInLessonSpecification(studentId, lessonId));
+        }
+
+        /// <summary>
+        /// Асинхронное проверка существования домашней работы по идентификатру урока.
+        /// </summary>
+        /// <param name="lessonId">Идентификатор урока.</param>
+        /// <returns>Домашняя работа.</returns>
+        public async Task<Homework> HomeworkExistsByLessonIdAsync(int lessonId)
+        {
+            return await _homeworkRepo.GetItemAsync(
+                new HomeworkSpecificationByLesson(lessonId));
+        }
+
+        /// <summary>
+        /// Асинхронное получение списка студентов по идентификатору класса.
+        /// </summary>
+        /// <param name="classId">Идентификатор класса.</param>
+        /// <returns>Коллекция студентов.</returns>
+        public async Task<List<Student>> GetStudentsByClassIdAsync(int classId)
+        {
+            return await _studentRepo.GetListAsync(
+                new StudentsSpecification(classId));
+        }
+
+        /// <summary>
+        /// Получение коллекции родителей по идентификатору студента.
+        /// </summary>
+        /// <param name="studentId">Идентификатор студента.</param>
+        /// <returns>Коллекция родителей.</returns>
+        public async Task<List<Parent>> GetParentsByStudentIdAsync(int studentId)
+        {
+            return await _parentRepo.GetListAsync(
+                new ParentsSpecification(studentId));
+        }
+
+        /// <summary>
+        /// Асинхронное получение статуса прогресса домашней работы.
+        /// </summary>
+        /// <param name="studentInLessonId">Идентификатор студента на уроке.</param>
+        /// <returns>Статус прогресса домашней работы.</returns>
+        public async Task<HomeworkProgressStatus> GetHomeworkProgressStatusAsync(
+            int studentInLessonId)
+        {
+            return await _homeworkProgressStatusRepo.GetItemAsync(
+                new HomeworkProgressStatusSpecification(studentInLessonId));
+        }
+
+        /// <summary>
+        /// Асинхронное получение готовой домашней работы по идентификатору студента на уроке.
+        /// </summary>
+        /// <param name="studentInLessonId">Идентификатор студента на уроке.</param>
+        /// <returns></returns>
+        public async Task<CompletedHomework> GetCompletedHomeworkByStudentInLessonIdAsync(
+            int studentInLessonId)
+        {
+            return await _completedHomeworkRepo.GetItemAsync(
+                new CompletedHomeworkSpecification(studentInLessonId));
+        }
+
+       
+        /// <summary>
+        /// Асинхронное добавление урока.
+        /// </summary>
+        /// <param name="teacherId">Идентификатор урока.</param>
+        /// <param name="classId">Идентификатор класса.</param>
+        /// <param name="subjectId">Идентификатор предмета.</param>
+        /// <param name="theme">Тема урока.</param>
+        /// <param name="lessonDateTime">Время урока.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task AddLessonAsync(
             int teacherId,
             int classId,
@@ -328,6 +421,13 @@ namespace TeacherApi.Services
             }
         }
 
+        /// <summary>
+        /// Асинхронное добавление домашней работы.
+        /// </summary>
+        /// <param name="lessonId"><Идентификатор урока./param>
+        /// <param name="finishDateTime">Время окончания урок</param>
+        /// <param name="homeWork">Домашняя работа.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task AddHomeworkAsync(
             int lessonId,
             DateTime finishDateTime,
@@ -390,6 +490,14 @@ namespace TeacherApi.Services
             }
         }
 
+        /// <summary>
+        /// Асинхронное добавление встречи учителя и родителя.
+        /// </summary>
+        /// <param name="studentId">Идентификатор студента.</param>
+        /// <param name="teacherId">Идентификатор учителя.</param>
+        /// <param name="parentId">Идентификатор родителя.</param>
+        /// <param name="meetingDT">Время встречи родителя и учителя.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task AddTeacherParentMeetingAsync(
             int studentId, 
             int teacherId, 
@@ -417,6 +525,13 @@ namespace TeacherApi.Services
             await _teacherParentMeetingRepo.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Асинхронное добавления статуса прогресса домашней работы. 
+        /// </summary>
+        /// <param name="studentId">Идентификатор студента.</param>
+        /// <param name="lessonId">Идентификатор урока.</param>
+        /// <param name="homeworkStatusId">Статус домашней работы.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task AddHomeworkProgressStatusAsync(
             int studentId, int lessonId, int homeworkStatusId)
         {
@@ -439,12 +554,12 @@ namespace TeacherApi.Services
         }
 
         /// <summary>
-        /// 
+        /// Асинхронное обновление оценки домашней работы.
         /// </summary>
-        /// <param name="studentId"></param>
-        /// <param name="lessonId"></param>
-        /// <param name="grade"></param>
-        /// <returns></returns>
+        /// <param name="studentId">Идентификатор студента.</param>
+        /// <param name="lessonId">Идентификатор урока.</param>
+        /// <param name="grade">Оценка.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task UpdateGradeHomeworkAsync(int studentId, int lessonId, int grade)
         {
             Student student;
@@ -472,6 +587,13 @@ namespace TeacherApi.Services
              await _completedHomeworkRepo.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Асинхронное обновление оценки домашней работы.
+        /// </summary>
+        /// <param name="studentId">Идентификатор студента.</param>
+        /// <param name="lessonId">Идентификатор урока.</param>
+        /// <param name="grade">Оценка.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task UpdateGradeStudentInLessonAsync(
             int studentId, int lessonId, int grade)
         {
@@ -495,6 +617,13 @@ namespace TeacherApi.Services
             await _studentInLessonRepo.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Асинхронное обновление замечания.
+        /// </summary>
+        /// <param name="studentId">Идентификатор студента.</param>
+        /// <param name="lessonId">Идентификатор урока.</param>
+        /// <param name="comment">Замечание.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task UpdateCommentAsync(
             int studentId, int lessonId, string comment)
         {
@@ -518,6 +647,11 @@ namespace TeacherApi.Services
              await _studentInLessonRepo.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Удаление встречи учителя и родителя.
+        /// </summary>
+        /// <param name="teacherParentMeeting">Встречя учителя и родителя.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task RemoveTeacherParentMeeting(int teacherParentMeetingId)
         {
             TeacherParentMeetingSpecification teacherParentMeetingSpecification = 

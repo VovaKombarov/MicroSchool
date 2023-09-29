@@ -1,25 +1,22 @@
 ﻿using AutoMapper;
+using Common.Api;
+using Common.Api.Extensions;
+using Common.ErrorResponse;
+using Common.EventBus;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using TeacherApi.Data.Dtos;
+using TeacherApi.IntegrationEvents;
+using TeacherApi.IntegrationEvents.Events;
 using TeacherApi.Models;
 using TeacherApi.Services;
 using TeacherApi.Utilities;
-using Common.ErrorResponse;
-using Common.Api;
-using Common.Api.Extensions;
-using Microsoft.Extensions.Options;
-using TeacherApi.IntegrationEvents;
-using Common.EventBus;
-using System.Security.Cryptography.Xml;
-using Microsoft.Extensions.Logging;
-using TeacherApi.IntegrationEvents.Events;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 
 namespace TeacherApi.Controllers
 {
@@ -31,20 +28,43 @@ namespace TeacherApi.Controllers
     {
         #region Fields
 
+        /// <summary>
+        /// Маппер.
+        /// </summary>
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Обьект сервиса учителя.
+        /// </summary>
         private readonly ITeacherService _teacherService;
 
+        /// <summary>
+        /// Словарь опций.
+        /// </summary>
         private readonly IOptions<Dictionary<string, string>> _options; 
 
+        /// <summary>
+        /// Обьект брокера.
+        /// </summary>
         private readonly IEventBus _eventBus;
 
+        /// <summary>
+        /// Логгер.
+        /// </summary>
         private readonly ILogger _logger;
      
         #endregion Fields
 
         #region Constructors
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="teacherService">Сервис учителя.</param>
+        /// <param name="mapper">Маппер.</param>
+        /// <param name="eventBus">Брокер.</param>
+        /// <param name="options">Опции.</param>
+        /// <param name="logger">Логгер.</param>
         public TeachersController(
             ITeacherService teacherService,
             IMapper mapper,

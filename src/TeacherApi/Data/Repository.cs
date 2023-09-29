@@ -8,15 +8,21 @@ namespace TeacherApi.Data
 {
     public class Repository<T> : IRepository<T> where T : EntityBase
     {
-
         #region Fields
 
+        /// <summary>
+        /// Контекст данных.
+        /// </summary>
         private readonly AppDbContext _dbContext;
 
         #endregion Fields
 
         #region Constructors
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="dbContext">Контекст данных.</param>
         public Repository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -26,6 +32,11 @@ namespace TeacherApi.Data
 
         #region Utilities
 
+        /// <summary>
+        /// Построение запроса с учетом спецификации.
+        /// </summary>
+        /// <param name="specification">Спецификация.</param>
+        /// <returns>Запрос.</returns>
         private IQueryable<T> _BuildQueryOnSpecification(
             ISpecification<T> specification)
         {
@@ -54,6 +65,11 @@ namespace TeacherApi.Data
 
         #region Methods 
 
+        /// <summary>
+        /// Асинхронное получение элемента.
+        /// </summary>
+        /// <param name="specification">Спецификация.</param>
+        /// <returns>Элемент.</returns>
         public async Task<T> GetItemAsync(ISpecification<T> specification)
         {
             IQueryable<T> query = _BuildQueryOnSpecification(specification);
@@ -61,6 +77,11 @@ namespace TeacherApi.Data
             return await query.Where(specification.Criteria).FirstOrDefaultAsync();
         }
 
+        /// <summary>
+        /// Асинхронное получение коллекции элементов из базы.
+        /// </summary>
+        /// <param name="specification">Конкретная спецификация.</param>
+        /// <returns>Коллекция элементов.</returns>
         public async Task<List<T>> GetListAsync(ISpecification<T> specification)
         {
             IQueryable<T> query = _BuildQueryOnSpecification(specification);
@@ -68,21 +89,38 @@ namespace TeacherApi.Data
             return await query.Where(specification.Criteria).ToListAsync();
         }
 
+        /// <summary>
+        /// Асинхронное добавление элемента.
+        /// </summary>
+        /// <param name="entity">Добавляемая сущность.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task AddAsync(T entity)
         {
             await _dbContext.Set<T>().AddAsync(entity);
         }
 
+        /// <summary>
+        /// Обновление элемента.
+        /// </summary>
+        /// <param name="entity">Обновляемая сущность.</param>
         public void Remove(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
         }
 
+        /// <summary>
+        /// Удаление элемента.
+        /// </summary>
+        /// <param name="entity">Удаляемая сущность.</param>
         public void Update(T entity)
         {
             _dbContext.Set<T>().Update(entity);
         }
 
+        /// <summary>
+        /// Асихронное сохранение.
+        /// </summary>
+        /// <returns>Успешное сохранение или нет.</returns>
         public async Task<bool> SaveChangesAsync()
         {
             return (await _dbContext.SaveChangesAsync() >= 0);

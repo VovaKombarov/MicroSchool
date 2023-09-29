@@ -9,20 +9,50 @@ using TeacherApi.Models;
 
 namespace TeacherApi.IntegrationEvents.Services
 {
+    /// <summary>
+    /// Сервис учителя для событий интеграции.
+    /// </summary>
     public class TeacherIntegrationEventService : ITeacherIntegrationEventService
     {
         #region Fields
 
+        /// <summary>
+        /// Логгер.
+        /// </summary>
         private readonly ILogger<TeacherIntegrationEventService> _logger;
+
+        /// <summary>
+        /// Репозиторий для сущности родителя.
+        /// </summary>
         private IRepository<Parent> _parentRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности учителя.
+        /// </summary>
         private IRepository<Teacher> _teacherRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности студента.
+        /// </summary>
         private IRepository<Student> _studentRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности встречи родителя и учителя.
+        /// </summary>
         private IRepository<TeacherParentMeeting> _teacherParentMeetingRepo;
 
         #endregion Fields
 
         #region Constructors
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="logger">Логгер.</param>
+        /// <param name="parentRepo">Репозиторий для сущности родителя.</param>
+        /// <param name="teacherRepo">Репозиторий для сущности учителя.</param>
+        /// <param name="studentRepo">Репозиторий для сущности студента.</param>
+        /// <param name="teacherParentMeetingRepo">Репозиторий для сущности встречи родителя и учителя.</param>
         public TeacherIntegrationEventService(
             ILogger<TeacherIntegrationEventService> logger,
             IRepository<Parent> parentRepo,
@@ -41,6 +71,11 @@ namespace TeacherApi.IntegrationEvents.Services
 
         #region Methods
 
+        /// <summary>
+        /// Создание встречи родителя и учителя.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task CreateParentTeacherMeetingAsync(CreateParentTeacherMeetingEvent @event)
         {
             _logger.LogIntegrationEventStart(@event);
@@ -77,6 +112,11 @@ namespace TeacherApi.IntegrationEvents.Services
             }
         }
 
+        /// <summary>
+        /// Удаление встречи родителя и учителя.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task RemoveParentTeacherMeetingAsync(RemoveParentTeacherMeetingEvent @event)
         {
             _logger.LogIntegrationEventStart(@event);
