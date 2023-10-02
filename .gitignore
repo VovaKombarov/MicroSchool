@@ -365,3 +365,8 @@ FodyWeavers.xsd
 README.md
 
 appsettings.json
+
+appsettings.Development.json
+
+appsettings.Production.json
+
