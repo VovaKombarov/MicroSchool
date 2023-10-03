@@ -5,7 +5,6 @@
     /// </summary>
     public enum MessageKey
     {
-
         /// <summary>
         /// Статус домашней работы некорректный.
         /// </summary>

@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using ParentApi;
 using System.IO;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,8 +43,10 @@ public static class ServiceInitializer
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
-        services.AddDbContext<AppDbContext>(options => options.UseNpgsql(
-            configuration.GetConnectionString("ParentApiConnectionString")));
+        services.AddDbContext<AppDbContext>(options => options
+            .UseNpgsql(configuration.GetConnectionString(
+                "ParentApiConnectionString"))
+            .UseLowerCaseNamingConvention());
 
         services.AddServiceDefaults(configuration);
 

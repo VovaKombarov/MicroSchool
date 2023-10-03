@@ -11,28 +11,98 @@ using System.Threading.Tasks;
 
 namespace ParentApi.IntegrationEvents.Services
 {
+    /// <summary>
+    /// Сервис интеграции родителя.
+    /// </summary>
     public class ParentIntegrationEventService : IParentIntegrationEventService
     {
         #region Fields
 
+        /// <summary>
+        /// Контекст данных.
+        /// </summary>
         private AppDbContext _context;
+
+        /// <summary>
+        /// Репозиторий для сущности учитель/класс/предмет.
+        /// </summary>
         private IRepository<TeacherClassSubject> _teacherClassSubjectRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности урока.
+        /// </summary>
         private IRepository<Lesson> _lessonRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности родителя.
+        /// </summary>
         private IRepository<Parent> _parentRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности учителя.
+        /// </summary>
         private IRepository<Teacher> _teacherRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности студента.
+        /// </summary>
         private IRepository<Student> _studentRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности домашней работы.
+        /// </summary>
         private IRepository<Homework> _homeworkRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности студента на уроке.
+        /// </summary>
         private IRepository<StudentInLesson> _studentInLessonRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности готовой работы.
+        /// </summary>
         private IRepository<CompletedHomework> _completedHomeworkRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности статуса домашней работы.
+        /// </summary>
         private IRepository<HomeworkStatus> _homeworkStatusRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности статуса прогресса домашней работы.
+        /// </summary>
         private IRepository<HomeworkProgressStatus> _homeworkProgressStatusRepo;
+
+        /// <summary>
+        /// Репозиторий для сущности встреч учителя и родителя.
+        /// </summary>
         private IRepository<TeacherParentMeeting> _teacherParentMeetingRepo;
+
+        /// <summary>
+        /// Логгер.
+        /// </summary>
         private readonly ILogger<ParentIntegrationEventService> _logger;
 
         #endregion Fields
 
         #region Constructors
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="context">Контекст данных.</param>
+        /// <param name="teacherClassSubjectRepo">Репозиторий для сущности учитель/класс/предмет.</param>
+        /// <param name="lessonRepo">Репозиторий для сущности урока.</param>
+        /// <param name="parentRepo">Репозиторий для сущности родителя.</param>
+        /// <param name="teacherRpo">Репозиторий для сущности учителя.</param>
+        /// <param name="studentRepo">Репозиторий для сущности студента.</param>
+        /// <param name="studentInLessonRepo">Репозиторий для сущности студента на уроке.</param>
+        /// <param name="completedHomeworkRepo">Репозиторий для сущности готовой работы.</param>
+        /// <param name="homeworkStatusRepo">Репозиторий для сущности статуса домашней работы.</param>
+        /// <param name="homeworkProgressStatusRepo">Репозиторий для сущности статуса прогресса домашней работы.</param>
+        /// <param name="teacherParentMeetingRepo">Репозиторий для сущности встреч учителя и родителя.</param>
+        /// <param name="homeworkRepo">Репозиторий для сущности домашней работы.</param>
+        /// <param name="logger">Логгер.</param>
         public ParentIntegrationEventService(
           AppDbContext context,
           IRepository<TeacherClassSubject> teacherClassSubjectRepo,
@@ -67,6 +137,11 @@ namespace ParentApi.IntegrationEvents.Services
 
         #region Methods
 
+        /// <summary>
+        /// Асинхронное создание урока.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task CreateLessonAsync(CreateLessonEvent @event)
         {
             _logger.LogIntegrationEventStart(@event);
@@ -120,6 +195,12 @@ namespace ParentApi.IntegrationEvents.Services
             }
         }
 
+
+        /// <summary>
+        /// Асинхронное создание встречи родителя и учителя.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task CreateTeacherParentMeetingAsync(CreateTeacherParentMeetingEvent @event)
         {
             _logger.LogIntegrationEventStart(@event);
@@ -154,6 +235,11 @@ namespace ParentApi.IntegrationEvents.Services
             }
         }
 
+        /// <summary>
+        /// Асинхронное создание домашней работы.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task CreateHomeworkAsync(CreateHomeworkEvent @event)
         {
             _logger.LogIntegrationEventStart(@event);
@@ -216,9 +302,13 @@ namespace ParentApi.IntegrationEvents.Services
                     _logger.LogIntegrationEventError(@event, ex);
                 }
             }
-
          }
 
+        /// <summary>
+        /// Асинхронное изменение статуса домашней работы.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task ChangeStatusHomeworkAsync(ChangeStatusHomeworkEvent @event)
         {
             _logger.LogIntegrationEventStart(@event);
@@ -252,6 +342,11 @@ namespace ParentApi.IntegrationEvents.Services
             }   
         }
 
+        /// <summary>
+        /// Асинхронное оценивание домашней работы.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task GradeHomeworkAsync(GradeHomeworkEvent @event)
         {
             _logger.LogIntegrationEventStart(@event);
@@ -279,6 +374,11 @@ namespace ParentApi.IntegrationEvents.Services
             }
         }
 
+        /// <summary>
+        /// Асинхронное создание замечания.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task CreateCommentAsync(CreateCommentEvent @event)
         {
             _logger.LogIntegrationEventStart(@event);
@@ -302,6 +402,11 @@ namespace ParentApi.IntegrationEvents.Services
             }
         }
 
+        /// <summary>
+        /// Асинхронное оценивание студента.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task GradeStudentInLessonAsync(GradeStudentInLessonEvent @event)
         {
             _logger.LogIntegrationEventStart(@event);
@@ -326,6 +431,11 @@ namespace ParentApi.IntegrationEvents.Services
             }
         }
 
+        /// <summary>
+        /// Асинхронное удаление встречи учителя и родителя.
+        /// </summary>
+        /// <param name="event">Событие интеграции.</param>
+        /// <returns>Результат выполнения операции.</returns>
         public async Task RemoveTeacherParentMeetingAsync(RemoveTeacherParentMeetingEvent @event)
         {
             _logger.LogIntegrationEventStart(@event);
