@@ -6,30 +6,64 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
 
-namespace TeacherApi
+namespace ParentApi.Utilities
 {
-    public class Authenticator
+    /// <summary>
+    /// Обработчик аутентификации.
+    /// </summary>
+    public class AuthenticationHandler
     {
-       private readonly ConfigurationManager _configuration;
+        #region Fields
 
-       private readonly ILogger _logger;
+        /// <summary>
+        /// Обьект конфигурации.
+        /// </summary>
+        private readonly ConfigurationManager _configuration;
 
+        /// <summary>
+        /// Логгер.
+        /// </summary>
+        private readonly ILogger _logger;
+
+        #endregion Fields
+
+        #region Constructors
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="configuration">Обьект конфигурации.</param>
+        public AuthenticationHandler(ConfigurationManager configuration)
+        {
+            _configuration = configuration;
+            _logger = _CreateLogger();
+        }
+
+        #endregion Constructors
+
+        #region Utilities 
+
+        /// <summary>
+        /// Создание логгера.
+        /// </summary>
+        /// <returns>Логгер.</returns>
         private ILogger _CreateLogger()
         {
             var logger = LoggerFactory.Create(config =>
             {
                 config.AddConsole();
-            }).CreateLogger("Authenticator");
+            }).CreateLogger("AuthenticationTypeCustomizer");
 
             return logger;
         }
 
-        public Authenticator(ConfigurationManager configuration)
-        {
-            _configuration = configuration;
-            _logger = _CreateLogger(); 
-        }
+        #endregion Utilities
 
+        #region Methods
+
+        /// <summary>
+        /// Аутентификация по Reference token.
+        /// </summary>
+        /// <param name="options">Опции IdenitityServer.</param>
         public void ReferenseTokenAuthentication(IdentityServerAuthenticationOptions options)
         {
             options.Authority = _configuration["IdentityServer:Authority"];
@@ -49,6 +83,10 @@ namespace TeacherApi
             };
         }
 
+        /// <summary>
+        /// Аутентификация по jwt токену.
+        /// </summary>
+        /// <param name="options">Опции IdenitityServer.</param>
         public void JwtBerarerAuthentication(JwtBearerOptions options)
         {
             options.Authority = _configuration["IdentityServer:Authority"];
@@ -69,5 +107,7 @@ namespace TeacherApi
                 },
             };
         }
+
+        #endregion Methods
     }
 }

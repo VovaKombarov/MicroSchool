@@ -1,8 +1,14 @@
 ﻿using AutoMapper;
+using Common.Api;
+using Common.Api.Extensions;
+using Common.ErrorResponse;
+using Common.EventBus;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ParentApi.Data.Dtos;
-using ParentApi.IntegrationEvents;
+using ParentApi.IntegrationEvents.Events;
 using ParentApi.Models;
 using ParentApi.Services;
 using ParentApi.Utilities;
@@ -11,13 +17,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Common.EventBus;
-using Common.ErrorResponse;
-using ParentApi.IntegrationEvents.Events;
-using Common.Api;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Logging;
-using Common.Api.Extensions;
 
 namespace ParentApi.Controllers
 {
@@ -28,20 +27,43 @@ namespace ParentApi.Controllers
     {
         #region Fields
 
+        /// <summary>
+        /// Обьект маппера.
+        /// </summary>
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Сервис родителя.
+        /// </summary>
         private readonly IParentService _parentService;
 
+        /// <summary>
+        /// Набор опций.
+        /// </summary>
         private readonly IOptions<Dictionary<string, string>> _options;
 
+        /// <summary>
+        /// Брокер.
+        /// </summary>
         private readonly IEventBus _eventBus;
 
+        /// <summary>
+        /// Логгер.
+        /// </summary>
         private readonly ILogger _logger;
 
         #endregion Fields
 
         #region Constructors
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="mapper">Обьект маппера.</param>
+        /// <param name="parentService">Сервис родителя.</param>
+        /// <param name="eventBus">Брокер.</param>
+        /// <param name="options">Набор опций.</param>
+        /// <param name="logger">Логгер.</param>
         public ParentsController(
             IMapper mapper, 
             IParentService parentService, 
@@ -59,6 +81,8 @@ namespace ParentApi.Controllers
         }
 
         #endregion Constructors
+
+        #region Methods
 
         /// <summary>
         /// Возвращает коллекцию замечаний.
@@ -326,6 +350,8 @@ namespace ParentApi.Controllers
 
             return Ok();
         }
+
+        #endregion Methods
     }
 }
 

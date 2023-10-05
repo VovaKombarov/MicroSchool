@@ -1,18 +1,13 @@
-using Common.Api;
-using IdentityApi;
+using IdentityApi.Controllers;
 using IdentityApi.Data;
 using IdentityApi.Models;
 using IdentityApi.Services;
+using IdentityApi.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Protocols;
 using Microsoft.OpenApi.Models;
-using Microsoft.Extensions.Logging;
-using IdentityApi.Controllers;
 using System.Reflection;
 
-// WebApplication строитель веб-приложений и служб
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.RegisterServices(builder.Configuration);
@@ -81,7 +76,6 @@ public static class MiddlewareInitializer
 {
     public static WebApplication ConfigureMiddleware(this WebApplication app)
     {
-
         if (app.Environment.IsDevelopment())
         {
             app.UseExceptionHandler("/error");
@@ -94,11 +88,9 @@ public static class MiddlewareInitializer
             });
         }
 
-        // Сопоставляет запрос с конечной точкой.
         app.UseRouting();
         app.MapControllers();
         app.UseIdentityServer();
-
 
         return app;
     }

@@ -1,9 +1,6 @@
 using Common.Api.Exstensions;
 using Common.EventBus;
-using Common.Api;
-using IdentityModel.AspNetCore.OAuth2Introspection;
 using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ParentApi.Controllers;
 using ParentApi.Data;
@@ -21,12 +17,10 @@ using ParentApi.IntegrationEvents.Events;
 using ParentApi.IntegrationEvents.Services;
 using ParentApi.Models;
 using ParentApi.Services;
+using ParentApi.Utilities;
 using System;
-using System.Threading.Tasks;
-using ParentApi;
 using System.IO;
 using System.Reflection;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -79,20 +73,12 @@ public static class ServiceInitializer
         services.AddSingleton<ILogger>(provider =>
            provider.GetRequiredService<ILogger<ParentsController>>());
 
-        Authenticator authenticator = new Authenticator(configuration);
+        AuthenticationHandler authenticator = new AuthenticationHandler(configuration);
         services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-            // Если необходим отзыв token, надо использовать Referense token.
-            // Не забывать переключать тип token Client в IdentityConfiguration. 
-            .AddIdentityServerAuthentication(options =>
-            {
-                authenticator.ReferenseTokenAuthentication(options);
-            });
-        // Если отзыв token не нужен, используем JWT token.
-        //.AddJwtBearer("Bearer", options =>
-        //{
-        //    JwtBerarerAuthentication(options);
-        //});
-
+           .AddJwtBearer("Bearer", options =>
+           {
+               authenticator.JwtBerarerAuthentication(options);
+           });
 
         // Проверяем наличие области действия в токене доступа
         services.AddAuthorization(options =>
@@ -100,12 +86,10 @@ public static class ServiceInitializer
             options.AddPolicy("ApiScope", policy =>
             {
                 policy.RequireAuthenticatedUser();
-
-                //policy.RequireClaim("scope", configuration["ApiScope:Teacher"]);
+                policy.RequireClaim("scope", configuration["AllowedScopes:Parent"]);
 
             });
         });
-
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
