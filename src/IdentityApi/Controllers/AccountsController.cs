@@ -1,19 +1,12 @@
-﻿using Common.ErrorResponse;
-using IdentityApi.Models;
+﻿using Common.Api;
+using Common.ErrorResponse;
 using IdentityApi.Services;
 using IdentityApi.Utilities;
 using IdentityApi.ViewModels;
 using IdentityModel.Client;
-using IdentityServer4.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Net;
-using static IdentityServer4.Models.IdentityResources;
-using Common.Api;
-
 
 namespace IdentityApi.Controllers
 {
@@ -23,16 +16,31 @@ namespace IdentityApi.Controllers
     {
         #region Fields 
 
+        /// <summary>
+        /// Сервис для Identity.
+        /// </summary>
         private readonly IIdentityService _identityService;
 
+        /// <summary>
+        /// Словарь опций.
+        /// </summary>
         private readonly IOptions<Dictionary<string, string>> _options;
 
+        /// <summary>
+        /// Логгер.
+        /// </summary>
         private readonly ILogger _logger;
 
         #endregion Fields
 
         #region Constructors 
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="identityService">Сервис для Identity.</param>
+        /// <param name="options">Словарь опций.</param>
+        /// <param name="logger">Логгер.</param>
         public AccountsController(
             IIdentityService identityService,
             IOptions<Dictionary<string, string>> options,

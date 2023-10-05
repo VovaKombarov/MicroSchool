@@ -10,13 +10,6 @@ namespace ParentApi.Data
 
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder
-                .UseNpgsql("Host=localhost;Port=5432;Database=microschool;Username=postgres;Password=Lokomotiv1922")
-                .UseLowerCaseNamingConvention(); 
-        }
-
         public DbSet<Class> Classes { get; set; }
 
         public DbSet<CompletedHomework> CompletedHomeworks { get; set; }

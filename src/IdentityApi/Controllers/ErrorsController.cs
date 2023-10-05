@@ -20,6 +20,11 @@ namespace IdentityApi.Controllers
 
         #region Utilities
 
+        /// <summary>
+        /// Формирование ответа при возникновении HttpStatusException.
+        /// </summary>
+        /// <param name="httpStatusException">Исключение типа HttpStatusException.</param>
+        /// <returns>Ответ на исключение.</returns>
         private BaseErrorResponse _ErrorResponseOnHttpStatusException(
             HttpStatusException httpStatusException)
         {
@@ -37,6 +42,10 @@ namespace IdentityApi.Controllers
 
         #region Methods
 
+        /// <summary>
+        /// Обработка исключений.
+        /// </summary>
+        /// <returns>Базовый ответ на ошибку.</returns>
         [Route("/error")]
         public BaseErrorResponse Error()
         {

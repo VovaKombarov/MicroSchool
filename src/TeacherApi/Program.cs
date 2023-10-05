@@ -23,7 +23,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using TeacherApi;
 using TeacherApi.Controllers;
 using TeacherApi.Data;
 using TeacherApi.IntegrationEvents;
@@ -44,7 +43,6 @@ var app = builder.Build();
 
 app.ConfigureMiddleware();
 app.Run();
-
 
 public static class ServiceInitializer
 {
@@ -80,20 +78,14 @@ public static class ServiceInitializer
         services.AddSingleton<ILogger>(provider =>
             provider.GetRequiredService<ILogger<TeachersController>>());
 
-        Authenticator authenticator = new Authenticator(configuration);
+        AuthenticationHandler authenticatorHandler = 
+            new AuthenticationHandler(configuration);
+
         services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-            // Если необходим отзыв token, надо использовать Referense token.
-            // Не забывать переключать тип token Client в IdentityConfiguration. 
             .AddIdentityServerAuthentication(options =>
             {
-                authenticator.ReferenseTokenAuthentication(options);
+                authenticatorHandler.ReferenseTokenHandler(options);
             });
-            // Если отзыв token не нужен, используем JWT token.
-            //.AddJwtBearer("Bearer", options =>
-            //{
-            //    JwtBerarerAuthentication(options);
-            //});
-
 
         // Проверяем наличие области действия в токене доступа
         services.AddAuthorization(options =>
@@ -101,8 +93,7 @@ public static class ServiceInitializer
             options.AddPolicy("ApiScope", policy =>
             {
                 policy.RequireAuthenticatedUser();
-
-                //policy.RequireClaim("scope", configuration["ApiScope:Teacher"]);
+                policy.RequireClaim("scope", configuration["AllowedScopes:Teacher"]);
             });
         });
 

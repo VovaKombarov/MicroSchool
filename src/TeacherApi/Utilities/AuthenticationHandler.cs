@@ -6,31 +6,66 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.Threading.Tasks;
 
-namespace ParentApi
+namespace TeacherApi.Utilities
 {
-    public class Authenticator
+    /// <summary>
+    /// Обработчик аутентификации.
+    /// </summary>
+    public class AuthenticationHandler
     {
+        #region Fields
+
+        /// <summary>
+        /// Обьект конфигурации.
+        /// </summary>
         private readonly ConfigurationManager _configuration;
 
+        /// <summary>
+        /// Логгер.
+        /// </summary>
         private readonly ILogger _logger;
 
-        private ILogger _CreateLogger()
-        {
-            var logger = LoggerFactory.Create(config =>
-            {
-                config.AddConsole();
-            }).CreateLogger("Authenticator");
+        #endregion Fields
 
-            return logger;
-        }
+        #region Constructors 
 
-        public Authenticator(ConfigurationManager configuration)
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="configuration">Обьект конфигурации.</param>
+        public AuthenticationHandler(ConfigurationManager configuration)
         {
             _configuration = configuration;
             _logger = _CreateLogger();
         }
 
-        public void ReferenseTokenAuthentication(IdentityServerAuthenticationOptions options)
+        #endregion Constructors
+
+        #region Utilities
+
+        /// <summary>
+        /// Создание логгера.
+        /// </summary>
+        /// <returns>Логгер.</returns>
+        private ILogger _CreateLogger()
+        {
+            var logger = LoggerFactory.Create(config =>
+            {
+                config.AddConsole();
+            }).CreateLogger("AuthenticationTypeCustomizer");
+
+            return logger;
+        }
+
+        #endregion Utililties
+
+        #region Methods
+
+        /// <summary>
+        /// Аутентификация по Reference token.
+        /// </summary>
+        /// <param name="options">Опции IdenitityServer.</param>
+        public void ReferenseTokenHandler(IdentityServerAuthenticationOptions options)
         {
             options.Authority = _configuration["IdentityServer:Authority"];
             options.ApiName = _configuration["AllowedScopes:Teacher"];
@@ -46,10 +81,20 @@ namespace ParentApi
                     _logger.LogError("Response token Authentication failed");
                     return Task.CompletedTask;
                 },
+
+                OnTokenValidated = w =>
+                {
+                    return Task.CompletedTask;
+                },
+ 
             };
         }
 
-        public void JwtBerarerAuthentication(JwtBearerOptions options)
+        /// <summary>
+        /// Аутентификация по jwt токену.
+        /// </summary>
+        /// <param name="options">Опции IdenitityServer.</param>
+        public void JwtBerarerHandler(JwtBearerOptions options)
         {
             options.Authority = _configuration["IdentityServer:Authority"];
             options.TokenValidationParameters = new TokenValidationParameters
@@ -69,5 +114,7 @@ namespace ParentApi
                 },
             };
         }
+
+        #endregion Methods
     }
 }

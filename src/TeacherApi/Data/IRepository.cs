@@ -5,7 +5,7 @@ using TeacherApi.Data.Specifications;
 namespace TeacherApi.Data
 {
     /// <summary>
-    /// Интерфейс для работы с репозитоями.
+    /// Интерфейс для работы с репозиториями.
     /// </summary>
     /// <typeparam name="T">Обощенный тип сущности БД.</typeparam>
     public interface IRepository<T> where T : EntityBase
