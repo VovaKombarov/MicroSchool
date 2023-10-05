@@ -58,8 +58,10 @@ namespace ParentApi.Services
 
         #endregion Fields
 
+        #region Constructors
+
         /// <summary>
-        /// 
+        /// Конструктор.
         /// </summary>
         /// <param name="studentRepo">Репозиторий для сущности студента.</param>
         /// <param name="teacherRepo">Репозиторий для сущности учителя.</param>
@@ -88,6 +90,8 @@ namespace ParentApi.Services
             _completedHomeworkRepo = completedHomeworkRepo;
             _subjectRepo = subjectRepo;
         }
+
+        #endregion Constructors
 
         #region Utilities
 

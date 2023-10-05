@@ -87,7 +87,6 @@ public static class ServiceInitializer
                 authenticatorHandler.ReferenseTokenHandler(options);
             });
 
-        // Проверяем наличие области действия в токене доступа
         services.AddAuthorization(options =>
         {
             options.AddPolicy("ApiScope", policy =>

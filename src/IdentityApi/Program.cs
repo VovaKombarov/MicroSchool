@@ -37,8 +37,6 @@ public static class ServiceInitializer
         services.AddSingleton<ILogger>(provider =>
           provider.GetRequiredService<ILogger<AccountsController>>());
 
-        // SignIn.RequireConfirmedAccount флаг,
-        // указывающий, требуетс€ ли подтвержденна€ учетна€ запись.
         services.AddIdentity<User, IdentityRole>(options => 
             options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationContext>();
@@ -47,7 +45,6 @@ public static class ServiceInitializer
 
         services.AddIdentityServer()
             .AddDeveloperSigningCredential()
-            // ќпредел€ет глобальный список доступных областей идентификации.
             .AddInMemoryIdentityResources(IdentityConfiguration.IdentityResources)
             .AddInMemoryApiResources(config.GetApiResources())
             .AddInMemoryApiScopes(config.GetApiScopes())
@@ -82,7 +79,6 @@ public static class MiddlewareInitializer
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                // „тобы пользовательский интерфейс Swagger отображалс€ в корневом каталоге
                 options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 options.RoutePrefix = string.Empty;
             });

@@ -80,7 +80,6 @@ public static class ServiceInitializer
                authenticator.JwtBerarerAuthentication(options);
            });
 
-        // Проверяем наличие области действия в токене доступа
         services.AddAuthorization(options =>
         {
             options.AddPolicy("ApiScope", policy =>

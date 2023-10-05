@@ -1,9 +1,6 @@
 ﻿using Common.Api;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
 using TeacherApi.Data;
 using TeacherApi.Data.Specifications;
@@ -12,6 +9,9 @@ using TeacherApi.Utilities;
 
 namespace TeacherApi.Services
 {
+    /// <summary>
+    /// Сервис учителя.
+    /// </summary>
     public class TeacherService : ITeacherService
     {
         #region Fields
@@ -21,37 +21,93 @@ namespace TeacherApi.Services
         /// </summary>
         private AppDbContext _context;
 
+        /// <summary>
+        /// Репозиторий для сущности класса.
+        /// </summary>
         private readonly IRepository<Class> _classRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности студента.
+        /// </summary>
         private readonly IRepository<Student> _studentRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности предмета.
+        /// </summary>
         private readonly IRepository<Subject> _subjectRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности учителя.
+        /// </summary>
         private readonly IRepository<Teacher> _teacherRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности учителя/класса/предмета.
+        /// </summary>
         private readonly IRepository<TeacherClassSubject> _teacherClassSubjectRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности урока.
+        /// </summary>
         private readonly IRepository<Lesson> _lessonRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности родителя.
+        /// </summary>
         private readonly IRepository<Parent> _parentRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности студента на уроке.
+        /// </summary>
         private readonly IRepository<StudentInLesson> _studentInLessonRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности домашней работы.
+        /// </summary>
         private readonly IRepository<Homework> _homeworkRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности прогресса домашней работы.
+        /// </summary>
         private readonly IRepository<HomeworkProgressStatus>
             _homeworkProgressStatusRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности готовой домашней работы.
+        /// </summary>
         private readonly IRepository<CompletedHomework> _completedHomeworkRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности статуса домашней работы.
+        /// </summary>
         private readonly IRepository<HomeworkStatus> _homeWorkStatusRepo;
 
+        /// <summary>
+        /// Репозиторий для сущности встречи родителя и учителя.
+        /// </summary>
         private readonly IRepository<TeacherParentMeeting> _teacherParentMeetingRepo;
 
         #endregion Fields
 
         #region Constructors
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="context">Контекст.</param>
+        /// <param name="classRepo">Репозиторий для сущности класса.</param>
+        /// <param name="studentRepo">Репозиторий для сущности студента.</param>
+        /// <param name="teacherClassSubjectRepo">Репозиторий для сущности учителя/класса/предмета.</param>
+        /// <param name="parentRepo">Репозиторий для сущности родителя.</param>
+        /// <param name="lessonRepo">Репозиторий для сущности урока.</param>
+        /// <param name="studentInLessonRepo">Репозиторий для сущности студента на уроке.</param>
+        /// <param name="homeworkRepo">Репозиторий для сущности домашней работы.</param>
+        /// <param name="homeworkProgressStatusRepo">Репозиторий для сущности прогресса домашней работы.</param>
+        /// <param name="subjectRepo">Репозиторий для сущности предмета.</param>
+        /// <param name="teacherRepo">Репозиторий для сущности учителя.</param>
+        /// <param name="completedHomeworkRepo">Репозиторий для сущности готовой домашней работы.</param>
+        /// <param name="homeworkStatusRepo">Репозиторий для сущности статуса домашней работы.</param>
+        /// <param name="teacherParentMeetingRepo">Репозиторий для сущности встречи родителя и учителя.</param>
         public TeacherService(
             AppDbContext context,
             IRepository<Class> classRepo,
@@ -89,6 +145,13 @@ namespace TeacherApi.Services
 
         #region Utilities
 
+        /// <summary>
+        /// Создание обьекта урока.
+        /// </summary>
+        /// <param name="lessonDateTime">Время урока.</param>
+        /// <param name="teacherClassSubject">Обьект учитель/класс/предмет </param>
+        /// <param name="theme">Тема урока.</param>
+        /// <returns>Обьект урока.</returns>
         private Lesson _CreateLesson(
             DateTime lessonDateTime,
             TeacherClassSubject teacherClassSubject,
@@ -102,20 +165,33 @@ namespace TeacherApi.Services
             };
         }
 
+        /// <summary>
+        /// Создание обьекта домашней работы.
+        /// </summary>
+        /// <param name="lesson">Урок.</param>
+        /// <param name="finishDT">Время окончания урока.</param>
+        /// <param name="homeWork">Домашняя работа.</param>
+        /// <returns>Обьект домащней работы.</returns>
         private Homework _CreateHomework(
             Lesson lesson,
             DateTime finishDT,
-            string hmwork)
+            string homeWork)
         {
             return new Homework()
             {
                 Lesson = lesson,
                 StartDT = lesson.LessonDT,
                 FinishDT = finishDT,
-                Howework = hmwork
+                Howework = homeWork
             };  
         }
 
+        /// <summary>
+        /// Создание обьекта студент на уроке.
+        /// </summary>
+        /// <param name="lesson">Урок.</param>
+        /// <param name="student">Студент.</param>
+        /// <returns>Обьект студента на уроке.</returns>
         private StudentInLesson _CreateStudentInLesson(
             Lesson lesson,
             Student student)
@@ -127,6 +203,11 @@ namespace TeacherApi.Services
             };
         }
 
+        /// <summary>
+        /// Создание обьекта готовой домашней работы.
+        /// </summary>
+        /// <param name="studentInLesson">Студент на уроке.</param>
+        /// <returns>Обьект домашней работы.</returns>
         private CompletedHomework _CreateCompletedHomework(
             StudentInLesson studentInLesson)
         {
@@ -136,6 +217,14 @@ namespace TeacherApi.Services
             };
         }
 
+        /// <summary>
+        /// Создание обьекта встречи учителя и родителя.
+        /// </summary>
+        /// <param name="student">Студент.</param>
+        /// <param name="teacher">Учитель.</param>
+        /// <param name="parent">Родитель.</param>
+        /// <param name="meetingDT">Время встречи.</param>
+        /// <returns>Встреча учителя и родителя.</returns>
         private TeacherParentMeeting _CreateTeacherParentMeeting(
             Student student,
             Teacher teacher,
@@ -152,16 +241,15 @@ namespace TeacherApi.Services
             };
         }
 
-        private async Task<List<StudentInLesson>> _GetStudentsInLessonByLessonId(
-            int lessonId)
-        {
-            return await _studentInLessonRepo.GetListAsync(
-                new StudentInLessonSpecification(lessonId));
-        }
-
+        /// <summary>
+        /// Создание обьекта прогресса домашней работы.
+        /// </summary>
+        /// <param name="studentInLesson">Студент на уроке.</param>
+        /// <param name="homeworkStatus">Статус домашней работы.</param>
+        /// <returns>Обьект статуса домашней работы.</returns>
         private HomeworkProgressStatus _CreateHomeworkProgressStatus(
-            StudentInLesson studentInLesson,
-            HomeworkStatus homeworkStatus)
+           StudentInLesson studentInLesson,
+           HomeworkStatus homeworkStatus)
         {
             HomeworkProgressStatus homeworkProgressStatus =
                 new HomeworkProgressStatus()
@@ -172,6 +260,18 @@ namespace TeacherApi.Services
                 };
 
             return homeworkProgressStatus;
+        }
+
+        /// <summary>
+        /// Асинхронный возврат коллекции студентов на уроке.
+        /// </summary>
+        /// <param name="lessonId">Идентификатор студента на уроке.</param>
+        /// <returns>Коллекция студентов на уроке.</returns>
+        private async Task<List<StudentInLesson>> _GetStudentsInLessonByLessonId(
+            int lessonId)
+        {
+            return await _studentInLessonRepo.GetListAsync(
+                new StudentInLessonSpecification(lessonId));
         }
 
         #endregion Utilities
@@ -650,7 +750,7 @@ namespace TeacherApi.Services
         /// <summary>
         /// Удаление встречи учителя и родителя.
         /// </summary>
-        /// <param name="teacherParentMeeting">Встречя учителя и родителя.</param>
+        /// <param name="teacherParentMeetingId">Встречя учителя и родителя.</param>
         /// <returns>Результат выполнения операции.</returns>
         public async Task RemoveTeacherParentMeeting(int teacherParentMeetingId)
         {

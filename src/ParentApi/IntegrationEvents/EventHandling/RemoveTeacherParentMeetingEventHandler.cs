@@ -36,7 +36,7 @@ namespace ParentApi.IntegrationEvents.EventHandling
         #region Methods 
 
         /// <summary>
-        /// Обработчик события.
+        /// Асинхронный обработчик события.
         /// </summary>
         /// <param name="event">Событие интеграции.</param>
         /// <returns>Результат выполнения операции.</returns>
