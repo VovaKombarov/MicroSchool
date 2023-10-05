@@ -4,6 +4,9 @@ using System.Net;
 
 namespace Common.TestsUtils
 {
+    /// <summary>
+    /// Конвертер ActionResult.
+    /// </summary>
     public static class ActionResultConverter
     {
         #region Constants 
@@ -14,6 +17,12 @@ namespace Common.TestsUtils
 
         #region Methods
 
+        /// <summary>
+        /// Получает статус кода http.
+        /// </summary>
+        /// <typeparam name="T">Обощенный тип для результата.</typeparam>
+        /// <param name="actionResult">Обьект ActionResult.</param>
+        /// <returns>Статус кода http.</returns>
         public static HttpStatusCode GetStatusCode<T>(ActionResult<T> actionResult)
         {
             IConvertToActionResult convertToActionResult = actionResult;
@@ -21,6 +30,11 @@ namespace Common.TestsUtils
             return (HttpStatusCode)actionResultWithStatusCode?.StatusCode;
         }
 
+        /// <summary>
+        /// Получает статус кода http.
+        /// </summary>
+        /// <param name="result">Результат запроса.</param>
+        /// <returns>Статус кода http.</returns>
         public static HttpStatusCode GetStatusCode(IActionResult result)
         {
             return (HttpStatusCode)result

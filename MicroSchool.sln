@@ -31,10 +31,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dbScripts", "dbScripts", "{
 	ProjectSection(SolutionItems) = preProject
 		dbScripts\CreateTablesMSSQL.sql = dbScripts\CreateTablesMSSQL.sql
 		dbScripts\FillTablesMSSQL.sql = dbScripts\FillTablesMSSQL.sql
-		dbScripts\FillTablesPostqre.sql = dbScripts\FillTablesPostqre.sql
 		dbScripts\InsertTestDataMSSQL.sql = dbScripts\InsertTestDataMSSQL.sql
-		dbScripts\InsertTestDataPostqre.sql = dbScripts\InsertTestDataPostqre.sql
+		dbScripts\FillTablesPostgreSQL.sql = dbScripts\FillTablesPostgreSQL.sql
 		dbScripts\Utilities.sql = dbScripts\Utilities.sql
+		dbScripts\InsertTestDataPostgreSQL.sql = dbScripts\InsertTestDataPostgreSQL.sql
 	EndProjectSection
 EndProject
 Global

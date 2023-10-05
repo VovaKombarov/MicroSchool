@@ -1,4 +1,6 @@
-﻿/*Удаление внешнего ключа таблицы dbo.Students на таблицу dbo.Classes */
+﻿/*Вспомогательные запросы */
+
+/*Удаление внешнего ключа таблицы dbo.Students на таблицу dbo.Classes */
 ALTER TABLE dbo.Students 
 DROP CONSTRAINT FK_Students_Classes_ClassId
 

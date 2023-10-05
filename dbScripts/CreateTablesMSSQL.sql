@@ -1,4 +1,4 @@
-﻿USE master;
+﻿/* Создание базы через sql ( альтернатива миграции EF) */
 
 -- Удаляем базу, если она есть
 IF DB_ID('microschool') IS NOT NULL DROP DATABASE microschool;
@@ -30,6 +30,7 @@ CREATE TABLE skool.Classes
 		CONSTRAINT PK_Classes PRIMARY KEY(Id),
 );
 
+-- Создаем таблицы студентов
 CREATE TABLE skool.Students
 (
 	Id			INT					NOT NULL IDENTITY(1,1),
@@ -45,6 +46,7 @@ CREATE TABLE skool.Students
 		CONSTRAINT CHK_BirthDate CHECK(BirthDate <= CURRENT_TIMESTAMP)
 )
 
+-- Создание таблицы родителей
 CREATE TABLE skool.Parents
 (
 	Id			INT					NOT NULL IDENTITY(1,1),
@@ -54,6 +56,7 @@ CREATE TABLE skool.Parents
 		CONSTRAINT PK_Parents PRIMARY KEY(Id),
 )
 
+-- Создаем таблицы связей родителя и студента
 CREATE TABLE skool.ParentStudent
 ( 
 	ParentsId	INT		NOT NULL,
@@ -67,6 +70,7 @@ CREATE TABLE skool.ParentStudent
 			REFERENCES skool.Students(Id)	
 )
 
+-- Создаем таблицы учителей
 CREATE TABLE skool.Teachers
 (
 	Id			INT					NOT NULL IDENTITY(1,1),
@@ -76,7 +80,7 @@ CREATE TABLE skool.Teachers
 		CONSTRAINT PK_Teachers PRIMARY KEY(Id),
 )
 
-
+-- Создаем таблицы предметов
 CREATE TABLE skool.Subjects
 (
 	Id				INT					NOT NULL IDENTITY(1,1),
@@ -84,7 +88,7 @@ CREATE TABLE skool.Subjects
 		CONSTRAINT PK_Subjects PRIMARY KEY(Id),
 )
 
-
+-- Создаем таблицы связей учителей/классов/предметов
 CREATE TABLE skool.TeachersClassesSubjects
 ( 
     Id			INT		NOT NULL IDENTITY(1,1),
@@ -103,6 +107,7 @@ CREATE TABLE skool.TeachersClassesSubjects
 			REFERENCES skool.Subjects(Id),	
 )
 
+-- Создание таблицы уроков
 CREATE TABLE skool.Lessons
 (
 	Id							INT					NOT NULL IDENTITY(1,1),
@@ -115,6 +120,7 @@ CREATE TABLE skool.Lessons
 			REFERENCES skool.TeachersClassesSubjects(Id)
 )
 
+-- Создание таблицы домашних работ
 CREATE TABLE skool.Homeworks
 (
 	Id							INT					NOT NULL IDENTITY(1,1),
@@ -128,6 +134,7 @@ CREATE TABLE skool.Homeworks
 			REFERENCES skool.Lessons(Id)
 )
 
+-- Создание таблицы статусов домашней работы
 CREATE TABLE skool.HomeworkStatuses
 (
 	Id				INT					NOT NULL IDENTITY(1,1),
@@ -135,6 +142,7 @@ CREATE TABLE skool.HomeworkStatuses
 		CONSTRAINT PK_HomeworkStatuses PRIMARY KEY(Id),
 )
 
+-- Создание таблицы студентов на уроке
 CREATE TABLE skool.StudentsInLessons
 (
 	Id				INT					NOT NULL IDENTITY(1,1),
@@ -153,6 +161,7 @@ CREATE TABLE skool.StudentsInLessons
 			REFERENCES skool.Students(Id),
 )
 
+-- Создание таблицы готовых домашних работ
 CREATE TABLE skool.CompletedHomeworks
 (
 	Id					INT					NOT NULL IDENTITY(1,1),
@@ -166,7 +175,7 @@ CREATE TABLE skool.CompletedHomeworks
 			REFERENCES skool.StudentsInLessons(Id),
 )
 
-
+-- Создание таблицы статусов прогресса домашней работы
 CREATE TABLE skool.HomeworkProgressStatuses
 (
 	Id					INT					NOT NULL IDENTITY(1,1),
@@ -182,7 +191,7 @@ CREATE TABLE skool.HomeworkProgressStatuses
 			REFERENCES skool.HomeworkStatuses(Id),
 )
 
-
+-- Создание таблицы встреч учителей и родителей
 CREATE TABLE skool.TeachersParentsMeetings
 (
 	Id					INT					NOT NULL IDENTITY(1,1),

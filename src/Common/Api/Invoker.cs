@@ -71,7 +71,6 @@ namespace Common.Api
             }
             catch (HttpStatusException ex)
             {
-                // TODO потестить.
                 _logger.LogException(ex);
                 throw;
             }

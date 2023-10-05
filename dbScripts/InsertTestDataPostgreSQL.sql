@@ -1,4 +1,6 @@
-﻿/* Вставляем урок */
+﻿/* Заполняяем таблицы PostgreSQL небольшим кол-во данных */
+
+/* Вставляем урок */
 INSERT INTO skool.lessons(
 	teacherclasssubjectid, lessondt, theme)
 	VALUES (1, '2023-06-02', 'Тема 1. Введение в ораторское искусство часть 1')

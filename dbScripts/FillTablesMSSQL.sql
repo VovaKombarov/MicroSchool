@@ -1,30 +1,81 @@
-﻿/* Вставляем урок */
-INSERT INTO skool.lessons(
-	teacherclasssubjectid, lessondt, theme)
-	VALUES (1, '2023-06-02', 'Тема 1. Введение в ораторское искусство часть 1')
+﻿/* Заполнение справочных таблиц PostgreSQL */
 
-/* Вставляем учеников на уроке */
-INSERT INTO skool.studentsinlessons(
-	studentid, lessonid, comment)
-	VALUES (1, 1, 'Замечание 1'),
-		(4, 1, null)
+-- Вставляем классы
+INSERT INTO skool.Classes(Number, Letter) 
+VALUES
+	  ('9', 'A'),
+	  ('10', 'B'),
+	  ('11', 'C') 
 
-/* Вставляем домашнюю работу */
-INSERT INTO skool.homeworks(
-	lessonid, startdt, finishdt, howework)
-	VALUES (1, '2023-06-02', '2023-05-17', 'Домашняя работа по уроку 1');
+-- Коллекция студентов
+INSERT INTO skool.Students(Name, Patronymic, Surname, BirthDate, ClassId) 
+VALUES
+      ('Аглая', 'Ивановна', 'Епанчина', '2008-07-2', 1),
+	  ('Аделаида', 'Ивановна', 'Епанчина', '2007-08-2', 2),
+      ('Александра', 'Ивановна', 'Епанчина', '2006-12-1', 3),
+	  ('Николай', 'Ардалионович', 'Иволгин', '2008-07-2', 1),
+	  ('Варвара', 'Ардалионовна', 'Иволгина', '2007-08-2', 2),
+	  ('Гаврила', 'Ардалионович', 'Иволгин', '2006-6-1', 3)	 
 
-/* Вставляем готовность домашней работы */
-INSERT INTO skool.completedhomeworks(
-	studentinlessonid, work, grade)
-	VALUES (1, null, 4),
-		   (2, null, null);
+-- Коллекция родителей
+INSERT INTO skool.Parents(Name, Patronymic, Surname) 
+VALUES 
+		('Лизавета', 'Прокофьевна', 'Епанчина'),
+		('Иван', 'Федорович', 'Епанчин'),
+		('Ардалион', 'Александрович', 'Иволгин'),
+		('Нина', 'Александровна', 'Иволгина')
 
-/* Вставляем статусы прогресса */
-INSERT INTO skool.homeworkprogressstatuses(
-	studentinlessonid, statussetdt, homeworkstatusid)
-	VALUES 
-		(1, '2023-05-12', 1),
-		(2, '2023-05-12', 1)
+-- Связи между родителями и студентами
+INSERT INTO skool.ParentStudent(ParentsId, StudentsId)
+VALUES 
+		(1, 1),
+		(1, 2), 
+		(1, 3),
+		(2, 1), 
+		(2, 2),
+		(2, 3),
+		(3, 4),
+		(3, 5),
+		(3, 6),
+		(4, 4), 
+		(4, 5), 
+		(4, 6)
 
+-- Коллекция учителей
+INSERT INTO skool.Teachers(Name, Patronymic, Surname) 
+VALUES 
+		('Лев', 'Николевич', 'Мышкин'),
+		('Парфен', 'Семенович', 'Рогожин'),
+		('Настасья', 'Филиповна', 'Барашкова')	
 
+-- Коллекция предметов
+INSERT INTO skool.Subjects(SubjectName) 
+VALUES 
+		('Ораторское искусство'),
+		('Владение ножом'),
+		('Этикет')	
+
+-- Связи учителей/классов/предметов
+INSERT INTO skool.TeachersClassesSubjects(TeacherId, ClassId, SubjectId) 
+VALUES 
+		(1, 1, 1),
+		(1, 2, 1),
+		(1, 3, 1),
+		(2, 1, 2),
+		(2, 2, 2),
+		(2, 3, 2),
+		(3, 1, 3),
+		(3, 2, 3),	
+		(3, 3, 3)	
+
+-- Коллекция стутусов домашней работы
+INSERT INTO skool.Homeworkstatuses(Status)
+VALUES 
+	('Задана'),
+	('В работе'),
+	('Выполнена, требуется проверка родителя'),
+	('На проверке родителя'),
+	('Проверена родителем'),
+	('Готова к проверке учителем'),
+	('На проверке учителя'),
+	('Проверена учителем')

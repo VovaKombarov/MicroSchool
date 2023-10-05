@@ -1,11 +1,14 @@
-﻿INSERT INTO skool.classes(Number, Letter) 
+﻿/* Заполнение справочных таблиц PostgreSQL */
+
+-- Вставляем классы
+INSERT INTO skool.classes(Number, Letter) 
 VALUES
 	  ('9', 'A'),
 	  ('10', 'B'),
 	  ('11', 'C') 
 
-
-INSERT INTO skool.Students(Name, Patronymic, Surname, BirthDate, ClassId) 
+-- Коллекция студентов
+INSERT INTO skool.students(Name, Patronymic, Surname, BirthDate, ClassId) 
 VALUES
       ('Аглая', 'Ивановна', 'Епанчина', '2008-07-2', 1),
 	  ('Аделаида', 'Ивановна', 'Епанчина', '2007-08-2', 2),
@@ -14,14 +17,16 @@ VALUES
 	  ('Варвара', 'Ардалионовна', 'Иволгина', '2007-08-2', 2),
 	  ('Гаврила', 'Ардалионович', 'Иволгин', '2006-6-1', 3)	 
 
-INSERT INTO skool.Parents(Name, Patronymic, Surname) 
+-- Коллекция родителей
+INSERT INTO skool.parents(Name, Patronymic, Surname) 
 VALUES 
 		('Лизавета', 'Прокофьевна', 'Епанчина'),
 		('Иван', 'Федорович', 'Епанчин'),
 		('Ардалион', 'Александрович', 'Иволгин'),
 		('Нина', 'Александровна', 'Иволгина')
 
-INSERT INTO skool.ParentStudent(ParentsId, StudentsId)
+-- Связи между родителями и студентами
+INSERT INTO skool.parentstudent(ParentsId, StudentsId)
 VALUES 
 		(1, 1),
 		(1, 2), 
@@ -36,21 +41,22 @@ VALUES
 		(4, 5), 
 		(4, 6)
 
-
-INSERT INTO skool.Teachers(Name, Patronymic, Surname) 
+-- Коллекция учителей
+INSERT INTO skool.teachers(Name, Patronymic, Surname) 
 VALUES 
 		('Лев', 'Николевич', 'Мышкин'),
 		('Парфен', 'Семенович', 'Рогожин'),
 		('Настасья', 'Филиповна', 'Барашкова')	
 
-INSERT INTO skool.Subjects(SubjectName) 
+-- Коллекция предметов
+INSERT INTO skool.subjects(SubjectName) 
 VALUES 
 		('Ораторское искусство'),
 		('Владение ножом'),
 		('Этикет')	
 
-
-INSERT INTO skool.TeachersClassesSubjects(TeacherId, ClassId, SubjectId) 
+-- Связи учителей/классов/предметов
+INSERT INTO skool.teachersclassessubjects(TeacherId, ClassId, SubjectId) 
 VALUES 
 		(1, 1, 1),
 		(1, 2, 1),
@@ -62,6 +68,7 @@ VALUES
 		(3, 2, 3),	
 		(3, 3, 3)	
 
+-- Коллекция стутусов домашней работы
 INSERT INTO skool.homeworkstatuses(Status)
 VALUES 
 	('Задана'),
