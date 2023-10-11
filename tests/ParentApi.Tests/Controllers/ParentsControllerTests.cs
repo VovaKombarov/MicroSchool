@@ -79,8 +79,9 @@ namespace ParentApi.Tests.Controllers
         {
             if (setupKey == SetupKey.ReturnsValue)
             {
-                _parentService.Setup(w => w.GetCompletedHomeworkAsync(It.IsAny<int>(), It.IsAny<int>()))
-                    .Returns(Task.FromResult(completedHomework));
+                _parentService.Setup(w => w.GetCompletedHomeworkAsync(
+                    It.IsAny<int>(), It.IsAny<int>()))
+                        .Returns(Task.FromResult(completedHomework));
 
             }
             else
@@ -88,7 +89,8 @@ namespace ParentApi.Tests.Controllers
                 _parentService.Setup(w => w.GetCompletedHomeworkAsync(
                      It.IsAny<int>(),
                      It.IsAny<int>()))
-                    .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                        .Throws(new HttpStatusException(
+                            _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
@@ -98,7 +100,8 @@ namespace ParentApi.Tests.Controllers
             {
                 _parentService.Setup(w => w.RemoveParentTeacherMeetingAsync(
                     It.IsAny<int>()))
-                    .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
             else
             {
@@ -118,7 +121,8 @@ namespace ParentApi.Tests.Controllers
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<DateTime>()))
-                    .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
 
         }
@@ -142,8 +146,8 @@ namespace ParentApi.Tests.Controllers
             {
                 _parentService.Setup(w => w.StudentInLessonExistsAsync(
                     It.IsAny<int>(), It.IsAny<int>()))
-                   .Throws(new HttpStatusException(
-                       _GetHttpStatusCodeBySetupKey(setupKey)));
+                        .Throws(new HttpStatusException(
+                            _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
@@ -212,13 +216,15 @@ namespace ParentApi.Tests.Controllers
             if (setupKey == SetupKey.NotFound)
             {
                 _parentService.Setup(w => w.TeacherParentMeetingExistsAsync(
-                   It.IsAny<int>())).Returns(Task.FromResult<TeacherParentMeeting>(null));
+                   It.IsAny<int>())).Returns(
+                        Task.FromResult<TeacherParentMeeting>(null));
             }
 
             if (setupKey == SetupKey.ReturnsValue)
             {
                 _parentService.Setup(w => w.TeacherParentMeetingExistsAsync(
-                    It.IsAny<int>())).Returns(Task.FromResult(new TeacherParentMeeting()));
+                    It.IsAny<int>())).Returns(Task.FromResult(
+                        new TeacherParentMeeting()));
             }
             else
             {
@@ -237,7 +243,8 @@ namespace ParentApi.Tests.Controllers
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>(),
-                   It.IsAny<DateTime>())).Returns(Task.FromResult<TeacherParentMeeting>(null));
+                   It.IsAny<DateTime>()))
+                        .Returns(Task.FromResult<TeacherParentMeeting>(null));
             }
 
             if (setupKey == SetupKey.ReturnsValue)
@@ -246,14 +253,18 @@ namespace ParentApi.Tests.Controllers
                     It.IsAny<int>(), 
                     It.IsAny<int>(), 
                     It.IsAny<int>(), 
-                    It.IsAny<DateTime>())).Returns(Task.FromResult(new TeacherParentMeeting()));
+                    It.IsAny<DateTime>()))
+                        .Returns(Task.FromResult(new TeacherParentMeeting()));
             }
             else
             {
                 _parentService.Setup(w => w.TeacherParentMeetingExistsAsync(
-                    It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<DateTime>()))
-                   .Throws(new HttpStatusException(
-                       _GetHttpStatusCodeBySetupKey(setupKey)));
+                    It.IsAny<int>(), 
+                    It.IsAny<int>(), 
+                    It.IsAny<int>(), 
+                    It.IsAny<DateTime>()))
+                        .Throws(new HttpStatusException(
+                            _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
@@ -277,13 +288,16 @@ namespace ParentApi.Tests.Controllers
         {
             if (setupKey == SetupKey.InternalServerError)
             {
-                _parentService.Setup(w => w.GetStudentInLessonsAsync(It.IsAny<int>()))
-                    .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                _parentService.Setup(w => w.GetStudentInLessonsAsync(
+                    It.IsAny<int>()))
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
             else
             {
-                _parentService.Setup(w => w.GetStudentInLessonsAsync(It.IsAny<int>()))
-                   .Returns(Task.FromResult(new List<StudentInLesson>(studentInLessons)));
+                _parentService.Setup(w => w.GetStudentInLessonsAsync(
+                    It.IsAny<int>())).Returns(Task.FromResult(
+                        new List<StudentInLesson>(studentInLessons)));
             }
         }
 
@@ -291,13 +305,18 @@ namespace ParentApi.Tests.Controllers
         {
             if (setupKey == SetupKey.InternalServerError)
             {
-                _parentService.Setup(w => w.GetGradesAsync(It.IsAny<int>(), It.IsAny<int>()))
-                    .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                _parentService.Setup(w => w.GetGradesAsync(
+                    It.IsAny<int>(), 
+                    It.IsAny<int>()))
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
             else
             {
-                _parentService.Setup(w => w.GetGradesAsync(It.IsAny<int>(), It.IsAny<int>()))
-                   .Returns(Task.FromResult(new List<int>(grades)));
+                _parentService.Setup(w => w.GetGradesAsync(
+                    It.IsAny<int>(), 
+                    It.IsAny<int>()))
+                        .Returns(Task.FromResult(new List<int>(grades)));
             }
         }
 
@@ -308,9 +327,8 @@ namespace ParentApi.Tests.Controllers
 
         private void _SetupMappingList<T, Tdtos>(List<Tdtos> values)
         {
-            _mapper.Setup(m => m.Map<List<Tdtos>>(
-                It.IsAny<List<T>>()))
-                    .Returns(values);
+            _mapper.Setup(m => m.Map<List<Tdtos>>(It.IsAny<List<T>>()))
+                .Returns(values);
         }
 
         private void _SetupOptions()
@@ -321,9 +339,8 @@ namespace ParentApi.Tests.Controllers
                 { "GradeNotValid", "Оценка не валидна!"},
                 { "DateTimeNotValid", "Время невалидно!"},
                 {  "CommentMissing", "Замечание отсутствует!"},
-                 { "NoRating", "Нет оценки!"},
-                  { "DuplicateItem", "Повторяющийся элемент!"},
-
+                { "NoRating", "Нет оценки!"},
+                { "DuplicateItem", "Повторяющийся элемент!"},
             };
 
             _options.Setup(w => w.Value).Returns(keyValuePairs);
@@ -378,7 +395,8 @@ namespace ParentApi.Tests.Controllers
                 SetupKey.EmptyCollection, new List<StudentInLesson>());
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.GetComments(It.IsAny<int>()));
+                await _parentsController.GetComments(
+                    It.IsAny<int>()));
 
             Assert.Multiple(() =>
             {
@@ -396,7 +414,7 @@ namespace ParentApi.Tests.Controllers
                 SetupKey.NotEmptyCollection, FakeData.GetStudentInLessonsWithoutComments());
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.GetComments(It.IsAny<int>()));
+                await _parentsController.GetComments(It.IsAny<int>()));
 
             Assert.Multiple(() =>
             {
@@ -435,7 +453,8 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.GetComment(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetComment(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -447,7 +466,8 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.GetComment(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetComment(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -460,7 +480,8 @@ namespace ParentApi.Tests.Controllers
             _SetupLessonExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.GetComment(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetComment(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -473,7 +494,8 @@ namespace ParentApi.Tests.Controllers
             _SetupLessonExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.GetComment(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetComment(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -487,7 +509,8 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentInLessonExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.GetComment(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetComment(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -500,7 +523,8 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.GetComment(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetComment(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -516,7 +540,8 @@ namespace ParentApi.Tests.Controllers
                 FakeData.GetStudentInLesson(comment));
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.GetComment(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetComment(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.BadRequest));
         }
@@ -535,8 +560,7 @@ namespace ParentApi.Tests.Controllers
                    FakeData.GetStudentInLesson(FakeData.Values.NotEmptyString)));
 
             var result = await _parentsController.GetComment(
-               It.IsAny<int>(),
-               It.IsAny<int>());
+               It.IsAny<int>(),It.IsAny<int>());
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -550,7 +574,8 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentExistsAsync(SetupKey.InternalServerError);
 
            var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-           await _parentsController.GetGrade(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetGrade(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -562,7 +587,8 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrade(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetGrade(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -575,7 +601,8 @@ namespace ParentApi.Tests.Controllers
             _SetupLessonExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrade(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetGrade(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -588,7 +615,8 @@ namespace ParentApi.Tests.Controllers
             _SetupLessonExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrade(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetGrade(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -602,7 +630,8 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentInLessonExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrade(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetGrade(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -615,8 +644,9 @@ namespace ParentApi.Tests.Controllers
             _SetupLessonExistsAsync(SetupKey.ReturnsValue);
             _SetupStudentInLessonExistsAsync(SetupKey.NotFound);
 
-            var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrade(It.IsAny<int>(), It.IsAny<int>()));
+            var exception = Assert.ThrowsAsync<HttpStatusException>(
+                async () => await _parentsController.GetGrade(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -631,7 +661,8 @@ namespace ParentApi.Tests.Controllers
             _SetupGetCompletedHomeworkAsync(SetupKey.InternalServerError, null);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-                await _parentsController.GetGrade(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetGrade(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -647,9 +678,8 @@ namespace ParentApi.Tests.Controllers
                 SetupKey.ReturnsValue, FakeData.GetCompletedHomework(null));
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrade(
-               It.IsAny<int>(),
-               It.IsAny<int>()));
+                await _parentsController.GetGrade(
+                    It.IsAny<int>(),It.IsAny<int>()));
 
             Assert.Multiple(() =>
             {
@@ -671,9 +701,8 @@ namespace ParentApi.Tests.Controllers
                 SetupKey.ReturnsValue, FakeData.GetCompletedHomework(grade));
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrade(
-               It.IsAny<int>(),
-               It.IsAny<int>()));
+                await _parentsController.GetGrade(
+                    It.IsAny<int>(),It.IsAny<int>()));
 
             Assert.Multiple(() =>
             {
@@ -695,8 +724,7 @@ namespace ParentApi.Tests.Controllers
                 SetupKey.ReturnsValue, FakeData.GetCompletedHomework(grade));
 
             var result = await _parentsController.GetGrade(
-                 It.IsAny<int>(),
-                 It.IsAny<int>());
+                 It.IsAny<int>(),It.IsAny<int>());
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -710,7 +738,8 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrades(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetGrades(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -722,7 +751,8 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrades(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetGrades(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -734,8 +764,9 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentExistsAsync(SetupKey.ReturnsValue);
             _SetupSubjectExistsAsync(SetupKey.InternalServerError);
 
-            var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrades(It.IsAny<int>(), It.IsAny<int>()));
+            var exception = Assert.ThrowsAsync<HttpStatusException>(async () => 
+                await _parentsController.GetGrades(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -748,7 +779,8 @@ namespace ParentApi.Tests.Controllers
             _SetupSubjectExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrades(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetGrades(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -762,7 +794,8 @@ namespace ParentApi.Tests.Controllers
             _SetupGetGrades(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrades(It.IsAny<int>(), It.IsAny<int>()));
+                await _parentsController.GetGrades(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -774,8 +807,9 @@ namespace ParentApi.Tests.Controllers
             _SetupSubjectExistsAsync(SetupKey.ReturnsValue);
             _SetupGetGrades(SetupKey.ReturnsValue, new List<int>());
 
-            var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.GetGrades(It.IsAny<int>(), It.IsAny<int>()));
+            var exception = Assert.ThrowsAsync<HttpStatusException>(async () => 
+                await _parentsController.GetGrades(
+                    It.IsAny<int>(), It.IsAny<int>()));
 
             Assert.Multiple(() =>
             {
@@ -792,8 +826,7 @@ namespace ParentApi.Tests.Controllers
             _SetupGetGrades(SetupKey.ReturnsValue, FakeData.ValidGrades.ToList());
 
             var result = await _parentsController.GetGrades(
-                It.IsAny<int>(),
-                It.IsAny<int>());
+                It.IsAny<int>(), It.IsAny<int>());
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -807,9 +840,9 @@ namespace ParentApi.Tests.Controllers
         {
             _SetupTeacherParentMeetingExistsAsync(SetupKey.InternalServerError);
 
-            var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.RemoveParentTeacherMeeting(
-                 It.IsAny<int>()));
+            var exception = Assert.ThrowsAsync<HttpStatusException>(async () => 
+                await _parentsController.RemoveParentTeacherMeeting(
+                    It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -821,8 +854,8 @@ namespace ParentApi.Tests.Controllers
             _SetupTeacherParentMeetingExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.RemoveParentTeacherMeeting(
-                 It.IsAny<int>()));
+                await _parentsController.RemoveParentTeacherMeeting(
+                    It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -835,8 +868,8 @@ namespace ParentApi.Tests.Controllers
             _SetupRemoveParentTeacherMeetingAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.RemoveParentTeacherMeeting(
-                 It.IsAny<int>()));
+                await _parentsController.RemoveParentTeacherMeeting(
+                    It.IsAny<int>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -849,7 +882,7 @@ namespace ParentApi.Tests.Controllers
             _SetupRemoveParentTeacherMeetingAsync(SetupKey.ReturnsValue);
 
             var result = await _parentsController.RemoveParentTeacherMeeting(
-                              It.IsAny<int>());
+                It.IsAny<int>());
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -863,11 +896,11 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.CreateParentTeacherMeeting(
-                 It.IsAny<int>(), 
-                 It.IsAny<int>(), 
-                 It.IsAny<int>(), 
-                 It.IsAny<DateTime>()));
+                await _parentsController.CreateParentTeacherMeeting(
+                     It.IsAny<int>(), 
+                     It.IsAny<int>(), 
+                     It.IsAny<int>(), 
+                     It.IsAny<DateTime>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -879,11 +912,11 @@ namespace ParentApi.Tests.Controllers
             _SetupStudentExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.CreateParentTeacherMeeting(
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<DateTime>()));
+                await _parentsController.CreateParentTeacherMeeting(
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<DateTime>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -896,11 +929,11 @@ namespace ParentApi.Tests.Controllers
             _SetupTeacherExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.CreateParentTeacherMeeting(
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<DateTime>()));
+                await _parentsController.CreateParentTeacherMeeting(
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<DateTime>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -913,11 +946,11 @@ namespace ParentApi.Tests.Controllers
             _SetupTeacherExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.CreateParentTeacherMeeting(
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<DateTime>()));
+                await _parentsController.CreateParentTeacherMeeting(
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<DateTime>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -931,11 +964,11 @@ namespace ParentApi.Tests.Controllers
             _SetupParentExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.CreateParentTeacherMeeting(
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<DateTime>()));
+                await _parentsController.CreateParentTeacherMeeting(
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<DateTime>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -949,11 +982,11 @@ namespace ParentApi.Tests.Controllers
             _SetupParentExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _parentsController.CreateParentTeacherMeeting(
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<DateTime>()));
+                await _parentsController.CreateParentTeacherMeeting(
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<DateTime>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.NotFound));
         }
@@ -967,11 +1000,11 @@ namespace ParentApi.Tests.Controllers
             _SetupParentExistsAsync(SetupKey.ReturnsValue);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.CreateParentTeacherMeeting(
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                FakeData.Values.DateTimeMinusOneDay));
+                await _parentsController.CreateParentTeacherMeeting(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    FakeData.Values.DateTimeMinusOneDay));
 
             Assert.Multiple(() =>
             {
@@ -991,11 +1024,11 @@ namespace ParentApi.Tests.Controllers
             _SetupTeacherParentMeetingExistsAsyncWithFourArguments(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.CreateParentTeacherMeeting(
-              It.IsAny<int>(),
-              It.IsAny<int>(),
-              It.IsAny<int>(),
-              FakeData.Values.DateTimePlusOneDay));
+                await _parentsController.CreateParentTeacherMeeting(
+                  It.IsAny<int>(),
+                  It.IsAny<int>(),
+                  It.IsAny<int>(),
+                  FakeData.Values.DateTimePlusOneDay));
 
               Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -1010,11 +1043,11 @@ namespace ParentApi.Tests.Controllers
             _SetupTeacherParentMeetingExistsAsyncWithFourArguments(SetupKey.ReturnsValue);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.CreateParentTeacherMeeting(
-              It.IsAny<int>(),
-              It.IsAny<int>(),
-              It.IsAny<int>(),
-              FakeData.Values.DateTimePlusOneDay));
+                await _parentsController.CreateParentTeacherMeeting(
+                  It.IsAny<int>(),
+                  It.IsAny<int>(),
+                  It.IsAny<int>(),
+                  FakeData.Values.DateTimePlusOneDay));
 
             Assert.Multiple(() =>
             {
@@ -1035,11 +1068,11 @@ namespace ParentApi.Tests.Controllers
             _SetupAddTeacherParentMeetingAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _parentsController.CreateParentTeacherMeeting(
-             It.IsAny<int>(),
-             It.IsAny<int>(),
-             It.IsAny<int>(),
-             FakeData.Values.DateTimePlusOneDay));
+                await _parentsController.CreateParentTeacherMeeting(
+                 It.IsAny<int>(),
+                 It.IsAny<int>(),
+                 It.IsAny<int>(),
+                 FakeData.Values.DateTimePlusOneDay));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }
@@ -1052,10 +1085,10 @@ namespace ParentApi.Tests.Controllers
             _SetupParentExistsAsync(SetupKey.ReturnsValue);
 
             var result = await _parentsController.CreateParentTeacherMeeting(
-                               It.IsAny<int>(),
-                               It.IsAny<int>(),
-                               It.IsAny<int>(),
-                               FakeData.Values.DateTimePlusOneDay);      
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                FakeData.Values.DateTimePlusOneDay);      
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 

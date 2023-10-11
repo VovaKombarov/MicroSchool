@@ -1,25 +1,17 @@
-﻿using Common.EventBus;
-using Microsoft.Extensions.Options;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.Api;
+using Common.ErrorResponse;
+using Common.TestsUtils;
 using IdentityApi.Controllers;
 using IdentityApi.Services;
-using Microsoft.Extensions.Logging;
-using NUnit.Framework;
-using Common.ErrorResponse;
-using IdentityApi.ViewModels;
-using System.Net;
 using IdentityApi.Utilities;
+using IdentityApi.ViewModels;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Http;
-using Common.Api;
-using Common.TestsUtils;
-
-
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Moq;
+using NUnit.Framework;
+using System.Net;
 
 namespace IdentityApi.Tests.Controllers
 {
@@ -56,29 +48,28 @@ namespace IdentityApi.Tests.Controllers
 
         private void _SetupOptions()
         {
-            Dictionary<string, string> keyValuePairs = new Dictionary<string, string>()
+            Dictionary<string, string> dictionary = new Dictionary<string, string>()
             {
                 { "TokenError", "Ошибка получения токена!"},
                 { "UserExistsError", "Ошибка проверки пользователя!"},
                 { "UserExists", "Пользователь с таким email уже существует!"},
-                 {"UserNotExists", "Пользователь с таким email не существует!" },
-                  {"EmptyValue", "Пустое значение!" },
-
+                {"UserNotExists", "Пользователь с таким email не существует!" },
+                {"EmptyValue", "Пустое значение!" },
             };
 
-            _options.Setup(w => w.Value).Returns(keyValuePairs);
+            _options.Setup(w => w.Value).Returns(dictionary);
         }
 
         private void _SetupCheckUserViewModel(bool isCheck)
         {
-            _identityservice.Setup(w => w.CheckUserViewModel(It.IsAny<UserViewModel>()))
-                .Returns(isCheck);
+            _identityservice.Setup(w => w.CheckUserViewModel(
+                It.IsAny<UserViewModel>())).Returns(isCheck);
         }
 
         private void _SetupUserExistsAsync(bool exists)
         {
-            _identityservice.Setup(w => w.UserExistsAsync(It.IsAny<UserViewModel>()))
-                .Returns(Task.FromResult(exists));
+            _identityservice.Setup(w => w.UserExistsAsync(
+                It.IsAny<UserViewModel>())).Returns(Task.FromResult(exists));
         }
 
         private void _SetupCreateUserAsync(
@@ -86,14 +77,15 @@ namespace IdentityApi.Tests.Controllers
         {
             if(setupKey == SetupKey.InternalServerError)
             {
-                _identityservice.Setup(w => w.CreateUserAsync(It.IsAny<UserViewModel>()))
-                    .Throws(new HttpStatusException(
-                        HttpStatusCode.InternalServerError));
+                _identityservice.Setup(w => w.CreateUserAsync(
+                    It.IsAny<UserViewModel>())).Throws(
+                        new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
             else
             {
-                _identityservice.Setup(w => w.CreateUserAsync(It.IsAny<UserViewModel>()))
-                   .Returns(Task.CompletedTask);
+                _identityservice.Setup(w => w.CreateUserAsync(
+                    It.IsAny<UserViewModel>())).Returns(Task.CompletedTask);
             } 
         }
 
@@ -101,17 +93,15 @@ namespace IdentityApi.Tests.Controllers
         {
             if(setupKey == SetupKey.InternalServerError)
             {
-                _identityservice.Setup(w => w.GetTokenFromRequestHeaders(It.IsAny<HttpContext>()))
-                    .Throws(new HttpStatusException(
-                        HttpStatusCode.InternalServerError));
+                _identityservice.Setup(w => w.GetTokenFromRequestHeaders(
+                    It.IsAny<HttpContext>())).Throws(
+                        new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
             else
             {
                 _identityservice.Setup(w => w.GetTokenFromRequestHeaders(
-                    It.IsAny<HttpContext>()))
-                        .Returns("TestToken");
-
-                 
+                    It.IsAny<HttpContext>())).Returns("TestToken");    
             }
         }
 
@@ -119,14 +109,16 @@ namespace IdentityApi.Tests.Controllers
         {
             if (setupKey == SetupKey.InternalServerError)
             {
-                _identityservice.Setup(w => w.GetTokenAsync(It.IsAny<UserViewModel>()))
-                    .Throws(new HttpStatusException(
-                        HttpStatusCode.InternalServerError));
+                _identityservice.Setup(w => w.GetTokenAsync(
+                    It.IsAny<UserViewModel>()))
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
             else
             {
-                _identityservice.Setup(w => w.GetTokenAsync(It.IsAny<UserViewModel>()))
-                    .Returns(Task.FromResult(It.IsAny<TokenResponse>()));
+                _identityservice.Setup(w => w.GetTokenAsync(
+                    It.IsAny<UserViewModel>())).Returns(Task.FromResult(
+                        It.IsAny<TokenResponse>()));
                    
             }
         }
@@ -140,13 +132,15 @@ namespace IdentityApi.Tests.Controllers
         [TestCase("", "")]
         [TestCase("", null)]
         [TestCase(null, "")]
-        public void SignUp_EmailIsEmpty_ReturnsBadRequest(string name, string email)
+        public void SignUp_EmailIsEmpty_ReturnsBadRequest(
+            string name, string email)
         {
             UserViewModel userViewModel = new UserViewModel()
             {
-                Name = email,
+                Name = name,
                 Email = email
             };
+
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
                 await _accountsController.SignUp(userViewModel));
 
@@ -170,6 +164,7 @@ namespace IdentityApi.Tests.Controllers
                 Name = name,
                 Email = email
             };
+
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
                 await _accountsController.SignUp(userViewModel));
 
@@ -188,8 +183,8 @@ namespace IdentityApi.Tests.Controllers
             _SetupCheckUserViewModel(true);
             _SetupUserExistsAsync(true);
 
-            var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _accountsController.SignUp(It.IsAny<UserViewModel>()));
+            var exception = Assert.ThrowsAsync<HttpStatusException>(async () => 
+                await _accountsController.SignUp(It.IsAny<UserViewModel>()));
 
             Assert.Multiple(() =>
             {
@@ -208,10 +203,9 @@ namespace IdentityApi.Tests.Controllers
             _SetupCreateUserAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _accountsController.SignUp(It.IsAny<UserViewModel>()));
+                await _accountsController.SignUp(It.IsAny<UserViewModel>()));
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
-
         }
 
         [Category(TestCategory.INTERNAL_SERVER_ERROR)]
@@ -342,8 +336,8 @@ namespace IdentityApi.Tests.Controllers
         {
             _SetupGetTokenFromRequestHeaders(SetupKey.InternalServerError);
 
-            var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-               await _accountsController.SignOut());
+            var exception = Assert.ThrowsAsync<HttpStatusException>(
+                _accountsController.SignOut);
 
             Assert.That(exception.Status, Is.EqualTo(HttpStatusCode.InternalServerError));
         }

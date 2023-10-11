@@ -6,8 +6,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Common.Api.Exstensions
 {
+    /// <summary>
+    /// Общее расширение для всех проектов.
+    /// </summary>
     public static class CommonExstension
     {
+        /// <summary>
+        /// Добавление общих сервисов, которые используется всеми проектами. 
+        /// </summary>
+        /// <param name="services">Коллекция сервисов.</param>
+        /// <param name="configuration">Конфигурация приложения.</param>
+        /// <returns></returns>
         public static IServiceCollection AddServiceDefaults(
             this IServiceCollection services, IConfiguration configuration)
         {

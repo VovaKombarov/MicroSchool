@@ -1,3 +1,10 @@
+using AutoMapper;
+using Common.Api;
+using Common.ErrorResponse;
+using Common.EventBus;
+using Common.TestsUtils;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using System;
@@ -10,25 +17,9 @@ using TeacherApi.Models;
 using TeacherApi.Services;
 using TeacherApi.Tests.Utilities;
 using TeacherApi.Utilities;
-using Microsoft.Extensions.Options;
-using AutoMapper;
-using System.Linq.Expressions;
-using Common.EventBus;
-using Common.ErrorResponse;
-using Common.Api;
-using Microsoft.Extensions.Logging;
-using Common.TestsUtils;
-
 
 namespace TeachersService.Tests
 {
-    /// <summary>
-    /// Имя для теста должно состоять из трех частей.
-    /// 1. Имя тестируемого метода
-    /// 2. Сценарий, в котором выполняется тестирование
-    /// 3. Ожидаемое поведение при вызове сценарий.
-    /// </summary>
-
     public class TeachersControllerTests
     {
         #region Fields
@@ -55,7 +46,7 @@ namespace TeachersService.Tests
             {
                 SetupKey.InternalServerError => HttpStatusCode.InternalServerError,
                 SetupKey.NotFound => HttpStatusCode.NotFound,
-                _ => HttpStatusCode.NotFound
+                    _ => HttpStatusCode.NotFound
             };
         }
 
@@ -97,7 +88,6 @@ namespace TeachersService.Tests
             _options.Setup(w => w.Value).Returns(keyValuePairs);
         }
 
-       
         private void _SetupClassExistsAsync(SetupKey setupKey)
         {
             if (setupKey == SetupKey.ReturnsValue)
@@ -123,7 +113,8 @@ namespace TeachersService.Tests
             else
             {
                 _teacherService.Setup(w => w.StudentExistsAsync(It.IsAny<int>()))
-                   .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                   .Throws(new HttpStatusException(
+                       _GetHttpStatusCodeBySetupKey(setupKey)));
             }           
         }
 
@@ -153,9 +144,9 @@ namespace TeachersService.Tests
             else
             {
                 _teacherService.Setup(w => w.SubjectExistsAsync(It.IsAny<int>()))
-                   .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                   .Throws(new HttpStatusException(
+                       _GetHttpStatusCodeBySetupKey(setupKey)));
             }
-           
         }
 
         private void _SetupHomeworkExistsByLessonIdAsync(SetupKey setupKey)
@@ -167,8 +158,9 @@ namespace TeachersService.Tests
             }
             else
             {
-                _teacherService.Setup(w => w.HomeworkExistsByLessonIdAsync(It.IsAny<int>()))
-                   .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                _teacherService.Setup(w => w.HomeworkExistsByLessonIdAsync(
+                    It.IsAny<int>())).Throws(new HttpStatusException(
+                        _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
@@ -182,7 +174,8 @@ namespace TeachersService.Tests
             else
             {
                 _teacherService.Setup(w => w.LessonExistsAsync(It.IsAny<int>()))
-                    .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                    .Throws(new HttpStatusException(
+                        _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
@@ -191,12 +184,14 @@ namespace TeachersService.Tests
             if (setupKey == SetupKey.ReturnsValue)
             {
                 _teacherService.Setup(w => w.ParentExistsAsync(
-                    It.IsAny<int>())).Returns(Task.FromResult(new Parent()));
+                    It.IsAny<int>())).Returns(
+                        Task.FromResult(new Parent()));
             }
             else
             {
                 _teacherService.Setup(w => w.ParentExistsAsync(It.IsAny<int>()))
-                    .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                    .Throws(new HttpStatusException(
+                        _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
@@ -206,13 +201,14 @@ namespace TeachersService.Tests
             {
                 _teacherService.Setup(w => w.TeacherClassSubjectExistsAsync(
                     It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
-                    .Returns(Task.FromResult(new TeacherClassSubject()));
+                        .Returns(Task.FromResult(new TeacherClassSubject()));
             }
             else
             {
                 _teacherService.Setup(w => w.TeacherClassSubjectExistsAsync(
                    It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()))
-                   .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                        .Throws(new HttpStatusException(
+                            _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
@@ -222,13 +218,14 @@ namespace TeachersService.Tests
             {
                 _teacherService.Setup(w => w.TeacherParentMeetingExists(
                     It.IsAny<int>()))
-                    .Returns(Task.FromResult(new TeacherParentMeeting()));
+                        .Returns(Task.FromResult(new TeacherParentMeeting()));
             }
             else
             {
                 _teacherService.Setup(w => w.TeacherParentMeetingExists(
                    It.IsAny<int>()))
-                  .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                        .Throws(new HttpStatusException(
+                            _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
@@ -243,7 +240,8 @@ namespace TeachersService.Tests
             else
             {
                 _teacherService.Setup(w => w.HomeworkExistsAsync(
-                   It.IsAny<int>())).Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                   It.IsAny<int>())).Throws(new HttpStatusException(
+                       _GetHttpStatusCodeBySetupKey(setupKey)));
             } 
         }
 
@@ -254,14 +252,14 @@ namespace TeachersService.Tests
                 _teacherService.Setup(w => w.StudentInLessonExistsAsync(
 
                     It.IsAny<int>(), It.IsAny<int>()))
-                    .Returns(Task.FromResult(new StudentInLesson()));
-
+                        .Returns(Task.FromResult(new StudentInLesson()));
             }
             else
             {
                 _teacherService.Setup(w => w.StudentInLessonExistsAsync(
                    It.IsAny<int>(), It.IsAny<int>()))
-                   .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                        .Throws(new HttpStatusException(
+                            _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
@@ -270,20 +268,24 @@ namespace TeachersService.Tests
         {
             if (setupKey == SetupKey.InternalServerError)
             {
-                _teacherService.Setup(w => w.GetParentsByStudentIdAsync(It.IsAny<int>()))
-                    .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                _teacherService.Setup(w => w.GetParentsByStudentIdAsync(
+                    It.IsAny<int>()))
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
 
             if (setupKey == SetupKey.EmptyCollection)
             {
-                _teacherService.Setup(w => w.GetParentsByStudentIdAsync(It.IsAny<int>()))
-                    .Returns(Task.FromResult(new List<Parent>(parents)));
+                _teacherService.Setup(w => w.GetParentsByStudentIdAsync(
+                    It.IsAny<int>()))
+                        .Returns(Task.FromResult(new List<Parent>(parents)));
             }
 
             if (setupKey == SetupKey.NotEmptyCollection)
             {
-                _teacherService.Setup(w => w.GetParentsByStudentIdAsync(It.IsAny<int>()))
-                    .Returns(Task.FromResult(new List<Parent>(parents)));
+                _teacherService.Setup(w => w.GetParentsByStudentIdAsync(
+                    It.IsAny<int>()))
+                        .Returns(Task.FromResult(new List<Parent>(parents)));
             }
         }
 
@@ -291,16 +293,16 @@ namespace TeachersService.Tests
         {
             if (setupKey == SetupKey.ReturnsValue)
             {
-                _teacherService.Setup(w => w.HomeworkStatusExistsAsync(It.IsAny<int>()))
-                    .Returns(Task.FromResult(new HomeworkStatus()));
-
+                _teacherService.Setup(w => w.HomeworkStatusExistsAsync(
+                    It.IsAny<int>())).Returns(
+                        Task.FromResult(new HomeworkStatus()));
             }
             else
             {
-                _teacherService.Setup(w => w.HomeworkStatusExistsAsync(It.IsAny<int>()))
-                   .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                _teacherService.Setup(w => w.HomeworkStatusExistsAsync(
+                    It.IsAny<int>())).Throws(new HttpStatusException(
+                        _GetHttpStatusCodeBySetupKey(setupKey)));
             }
-
         }
 
         private void _SetupGetHomeworkProgressStatusAsync(SetupKey setupKey, 
@@ -316,35 +318,43 @@ namespace TeachersService.Tests
                     }
                 };
 
-                _teacherService.Setup(w => w.GetHomeworkProgressStatusAsync(It.IsAny<int>()))
-                    .Returns(Task.FromResult(homeworkProgress));
+                _teacherService.Setup(w => w.GetHomeworkProgressStatusAsync(
+                    It.IsAny<int>())).Returns(Task.FromResult(homeworkProgress));
 
             }
             else
             {
-                _teacherService.Setup(w => w.GetHomeworkProgressStatusAsync(It.IsAny<int>()))
-                   .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                _teacherService.Setup(w => w.GetHomeworkProgressStatusAsync(
+                    It.IsAny<int>()))
+                        .Throws(new HttpStatusException(
+                            _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
-        private void _SetupGetStudentsByClassIdAsync(SetupKey setupKey, List<Student> students = null)
+        private void _SetupGetStudentsByClassIdAsync(
+            SetupKey setupKey, List<Student> students = null)
         {
             if(setupKey == SetupKey.InternalServerError)
             {
-                _teacherService.Setup(w => w.GetStudentsByClassIdAsync(It.IsAny<int>()))
-                    .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                _teacherService.Setup(w => w.GetStudentsByClassIdAsync(
+                    It.IsAny<int>()))
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
 
             if(setupKey == SetupKey.EmptyCollection)
             {
-                _teacherService.Setup(w => w.GetStudentsByClassIdAsync(It.IsAny<int>()))
-                    .Returns(Task.FromResult(new List<Student>(students)));
+                _teacherService.Setup(w => w.GetStudentsByClassIdAsync(
+                    It.IsAny<int>()))
+                        .Returns(Task.FromResult(
+                            new List<Student>(students)));
             }
 
             if(setupKey == SetupKey.NotEmptyCollection)
             {
-                _teacherService.Setup(w => w.GetStudentsByClassIdAsync(It.IsAny<int>()))
-                    .Returns(Task.FromResult(new List<Student>(students)));
+                _teacherService.Setup(w => w.GetStudentsByClassIdAsync(
+                    It.IsAny<int>()))
+                        .Returns(Task.FromResult(new List<Student>(students)));
             }
         }
 
@@ -358,7 +368,8 @@ namespace TeachersService.Tests
                     It.IsAny<int>(),
                     It.IsAny<string>(), 
                     It.IsAny<DateTime>()))
-                   .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
         }
 
@@ -370,7 +381,8 @@ namespace TeachersService.Tests
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<int>()))
-                   .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
         }
 
@@ -382,7 +394,8 @@ namespace TeachersService.Tests
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<int>()))
-                   .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
         }
 
@@ -394,7 +407,8 @@ namespace TeachersService.Tests
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<string>()))
-                   .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
         }
 
@@ -409,15 +423,15 @@ namespace TeachersService.Tests
                     Work = homework
                 };
 
-                _teacherService.Setup(w => w.GetCompletedHomeworkByStudentInLessonIdAsync(It.IsAny<int>()))
-                    .Returns(Task.FromResult(completedHomework));
-
+                _teacherService.Setup(w => w.GetCompletedHomeworkByStudentInLessonIdAsync(
+                    It.IsAny<int>())).Returns(Task.FromResult(completedHomework));
             }
             else
             {
                 _teacherService.Setup(w => w.GetCompletedHomeworkByStudentInLessonIdAsync(
                      It.IsAny<int>()))
-                    .Throws(new HttpStatusException(_GetHttpStatusCodeBySetupKey(setupKey)));
+                        .Throws(new HttpStatusException(
+                            _GetHttpStatusCodeBySetupKey(setupKey)));
             }
         }
 
@@ -429,7 +443,8 @@ namespace TeachersService.Tests
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<int>()))
-                   .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
         }
 
@@ -442,7 +457,8 @@ namespace TeachersService.Tests
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<DateTime>()))
-                .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
         }
 
@@ -454,7 +470,8 @@ namespace TeachersService.Tests
                     It.IsAny<int>(),
                     It.IsAny<DateTime>(),
                     It.IsAny<string>()))
-                    .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
         }
 
@@ -464,9 +481,9 @@ namespace TeachersService.Tests
             {
                 _teacherService.Setup(w => w.RemoveTeacherParentMeeting(
                     It.IsAny<int>()))
-                    .Throws(new HttpStatusException(HttpStatusCode.InternalServerError));
+                        .Throws(new HttpStatusException(
+                            HttpStatusCode.InternalServerError));
             }
-
         }
 
         private void _SetupMappingList<T, Tdtos>(List<Tdtos> values)
@@ -506,7 +523,7 @@ namespace TeachersService.Tests
             
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.GetStudents(It.IsAny<int>()));
+                await _teachersController.GetStudents(It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -567,7 +584,7 @@ namespace TeachersService.Tests
             _SetupStudentExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.GetParents(It.IsAny<int>()));
+                await _teachersController.GetParents(It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -579,7 +596,7 @@ namespace TeachersService.Tests
             _SetupStudentExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _teachersController.GetParents(It.IsAny<int>()));
+                await _teachersController.GetParents(It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.NotFound);
         }
@@ -626,13 +643,13 @@ namespace TeachersService.Tests
 
             var result = await _teachersController.GetParents(It.IsAny<int>());
 
-             var  statusCode = ActionResultConverter.GetStatusCode(result);
+            var  statusCode = ActionResultConverter.GetStatusCode(result);
 
             Assert.Multiple(() =>
-                {
-                    Assert.AreEqual(statusCode, HttpStatusCode.OK);
-                    Assert.IsNotEmpty(result.Value);
-                });
+            {
+                Assert.AreEqual(statusCode, HttpStatusCode.OK);
+                Assert.IsNotEmpty(result.Value);
+            });
         }
 
         [Category(TestCategory.INTERNAL_SERVER_ERROR)]
@@ -883,8 +900,8 @@ namespace TeachersService.Tests
             _SetupLessonExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _teachersController.CreateHomework(
-                 It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<string>()));
+                await _teachersController.CreateHomework(
+                    It.IsAny<int>(), It.IsAny<DateTime>(), It.IsAny<string>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -896,10 +913,10 @@ namespace TeachersService.Tests
             _SetupLessonExistsAsync(SetupKey.ReturnsValue);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _teachersController.CreateHomework(
-                 It.IsAny<int>(), 
-                 FakeData.Values.DateTimeMinusOneDay,
-                 It.IsAny<string>()));
+                await _teachersController.CreateHomework(
+                     It.IsAny<int>(), 
+                     FakeData.Values.DateTimeMinusOneDay,
+                     It.IsAny<string>()));
 
             Assert.Multiple(() =>
             {
@@ -918,8 +935,8 @@ namespace TeachersService.Tests
             _SetupLessonExistsAsync(SetupKey.ReturnsValue);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _teachersController.CreateHomework(
-                 It.IsAny<int>(), FakeData.Values.DateTimePlusOneDay, homework));
+                await _teachersController.CreateHomework(
+                    It.IsAny<int>(), FakeData.Values.DateTimePlusOneDay, homework));
 
             Assert.Multiple(() =>
             {
@@ -936,10 +953,10 @@ namespace TeachersService.Tests
             _SetupAddHomeworkAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _teachersController.CreateHomework(
-                It.IsAny<int>(),
-                FakeData.Values.DateTimePlusOneDay,
-                FakeData.Values.NotEmptyString));
+                await _teachersController.CreateHomework(
+                    It.IsAny<int>(),
+                    FakeData.Values.DateTimePlusOneDay,
+                    FakeData.Values.NotEmptyString));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -951,9 +968,9 @@ namespace TeachersService.Tests
             _SetupLessonExistsAsync(SetupKey.ReturnsValue);
            
             var result = await _teachersController.CreateHomework(
-                   It.IsAny<int>(),
-                   FakeData.Values.DateTimePlusOneDay,
-                  FakeData.Values.NotEmptyString);
+                It.IsAny<int>(),
+                FakeData.Values.DateTimePlusOneDay,
+                FakeData.Values.NotEmptyString);
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -1031,7 +1048,6 @@ namespace TeachersService.Tests
                      It.IsAny<int>(),
                      It.IsAny<int>()));
 
-        
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
 
@@ -1064,7 +1080,6 @@ namespace TeachersService.Tests
                 await _teachersController.GetHomeworkStatus(
                      It.IsAny<int>(),
                      It.IsAny<int>()));
-
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1101,7 +1116,6 @@ namespace TeachersService.Tests
                      It.IsAny<int>(),
                      It.IsAny<int>()));
 
-
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
 
@@ -1133,8 +1147,8 @@ namespace TeachersService.Tests
             _SetupGetHomeworkProgressStatusAsync(SetupKey.ReturnsValue);
 
             var result = await _teachersController.GetHomeworkStatus(
-                    It.IsAny<int>(),
-                    It.IsAny<int>());
+                It.IsAny<int>(),
+                It.IsAny<int>());
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -1154,7 +1168,6 @@ namespace TeachersService.Tests
                     It.IsAny<int>(), 
                     It.IsAny<DateTime>()));
 
-
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
 
@@ -1171,7 +1184,6 @@ namespace TeachersService.Tests
                     It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<DateTime>()));
-
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1191,7 +1203,6 @@ namespace TeachersService.Tests
                     It.IsAny<int>(),
                     It.IsAny<DateTime>()));
 
-
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
 
@@ -1202,7 +1213,7 @@ namespace TeachersService.Tests
             _SetupStudentExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _teachersController.CreateTeacherParentMeeting(
+                await _teachersController.CreateTeacherParentMeeting(
                   It.IsAny<int>(),
                   It.IsAny<int>(),
                   It.IsAny<int>(),
@@ -1219,11 +1230,11 @@ namespace TeachersService.Tests
             _SetupTeacherExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _teachersController.CreateTeacherParentMeeting(
-                  It.IsAny<int>(),
-                  It.IsAny<int>(),
-                  It.IsAny<int>(),
-                  It.IsAny<DateTime>()));
+                await _teachersController.CreateTeacherParentMeeting(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<DateTime>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.NotFound);
         }
@@ -1237,11 +1248,11 @@ namespace TeachersService.Tests
             _SetupParentsExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _teachersController.CreateTeacherParentMeeting(
-                  It.IsAny<int>(),
-                  It.IsAny<int>(),
-                  It.IsAny<int>(),
-                  It.IsAny<DateTime>()));
+                await _teachersController.CreateTeacherParentMeeting(
+                      It.IsAny<int>(),
+                      It.IsAny<int>(),
+                      It.IsAny<int>(),
+                      It.IsAny<DateTime>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.NotFound);
         }
@@ -1255,11 +1266,11 @@ namespace TeachersService.Tests
             _SetupParentsExistsAsync(SetupKey.ReturnsValue);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _teachersController.CreateTeacherParentMeeting(
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 It.IsAny<int>(),
-                 FakeData.Values.DateTimeMinusOneDay));
+                await _teachersController.CreateTeacherParentMeeting(
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     It.IsAny<int>(),
+                     FakeData.Values.DateTimeMinusOneDay));
 
             Assert.Multiple(() =>
             {
@@ -1279,12 +1290,11 @@ namespace TeachersService.Tests
             _SetupAddTeacherParentMeetingAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-           await _teachersController.CreateTeacherParentMeeting(
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                It.IsAny<int>(),
-                FakeData.Values.DateTimePlusOneDay));
-
+                await _teachersController.CreateTeacherParentMeeting(
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    It.IsAny<int>(),
+                    FakeData.Values.DateTimePlusOneDay));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1298,10 +1308,10 @@ namespace TeachersService.Tests
             _SetupParentsExistsAsync(SetupKey.ReturnsValue);
 
             var result = await _teachersController.CreateTeacherParentMeeting(
-                  It.IsAny<int>(),
-                  It.IsAny<int>(), 
-                  It.IsAny<int>(), 
-                  FakeData.Values.DateTimePlusOneDay);
+                It.IsAny<int>(),
+                It.IsAny<int>(), 
+                It.IsAny<int>(), 
+                FakeData.Values.DateTimePlusOneDay);
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -1320,7 +1330,6 @@ namespace TeachersService.Tests
                    It.IsAny<int>(),
                    It.IsAny<int>()));
 
-
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
 
@@ -1332,11 +1341,10 @@ namespace TeachersService.Tests
             _SetupStudentExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.ChangeStatusHomework(
+                await _teachersController.ChangeStatusHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>()));
-
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1350,11 +1358,10 @@ namespace TeachersService.Tests
             _SetupStudentInLessonExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.ChangeStatusHomework(
+                await _teachersController.ChangeStatusHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>()));
-
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1368,13 +1375,11 @@ namespace TeachersService.Tests
             _SetupStudentInLessonExistsAsync(SetupKey.ReturnsValue);
             _SetupHomeworkExistsByLessonIdAsync(SetupKey.InternalServerError);
             
-
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.ChangeStatusHomework(
+                await _teachersController.ChangeStatusHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>()));
-
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1390,11 +1395,10 @@ namespace TeachersService.Tests
             _SetupHomeworkStatusExistsAsync(SetupKey.InternalServerError);
            
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.ChangeStatusHomework(
+                await _teachersController.ChangeStatusHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>()));
-
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1406,7 +1410,7 @@ namespace TeachersService.Tests
             _SetupLessonExistsAsync(SetupKey.NotFound);
            
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.ChangeStatusHomework(
+                await _teachersController.ChangeStatusHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>()));
@@ -1422,7 +1426,7 @@ namespace TeachersService.Tests
             _SetupStudentExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.ChangeStatusHomework(
+                await _teachersController.ChangeStatusHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>()));
@@ -1439,7 +1443,7 @@ namespace TeachersService.Tests
             _SetupStudentInLessonExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.ChangeStatusHomework(
+                await _teachersController.ChangeStatusHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>()));
@@ -1457,7 +1461,7 @@ namespace TeachersService.Tests
             _SetupHomeworkExistsByLessonIdAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.ChangeStatusHomework(
+                await _teachersController.ChangeStatusHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>()));
@@ -1476,7 +1480,7 @@ namespace TeachersService.Tests
             _SetupHomeworkStatusExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.ChangeStatusHomework(
+                await _teachersController.ChangeStatusHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>()));
@@ -1496,15 +1500,13 @@ namespace TeachersService.Tests
             _SetupAddHomeworkProgressStatusAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _teachersController.ChangeStatusHomework(
+                await _teachersController.ChangeStatusHomework(
                   It.IsAny<int>(),
                   It.IsAny<int>(),
                   It.IsAny<int>()));
 
-
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
-
 
         [Test]
         public async Task ChangeStatusHomework_AddHomeworkProgressStatusAsync_ReturnsOk()
@@ -1516,9 +1518,9 @@ namespace TeachersService.Tests
             _SetupHomeworkStatusExistsAsync(SetupKey.ReturnsValue);
 
             var result = await _teachersController.ChangeStatusHomework(
-                  It.IsAny<int>(),
-                  It.IsAny<int>(),
-                  It.IsAny<int>());
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<int>());
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -1532,10 +1534,9 @@ namespace TeachersService.Tests
             _SetupLessonExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _teachersController.GetCompletedHomework(
-                 It.IsAny<int>(),
-                 It.IsAny<int>()));
-
+                await _teachersController.GetCompletedHomework(
+                     It.IsAny<int>(),
+                     It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1548,10 +1549,9 @@ namespace TeachersService.Tests
             _SetupStudentExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _teachersController.GetCompletedHomework(
-                 It.IsAny<int>(),
-                 It.IsAny<int>()));
-
+                await _teachersController.GetCompletedHomework(
+                     It.IsAny<int>(),
+                     It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1565,10 +1565,9 @@ namespace TeachersService.Tests
             _SetupHomeworkExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _teachersController.GetCompletedHomework(
-                 It.IsAny<int>(),
-                 It.IsAny<int>()));
-
+                await _teachersController.GetCompletedHomework(
+                     It.IsAny<int>(),
+                     It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1583,9 +1582,9 @@ namespace TeachersService.Tests
             _SetupStudentInLessonExistsAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _teachersController.GetCompletedHomework(
-                 It.IsAny<int>(),
-                 It.IsAny<int>()));
+                await _teachersController.GetCompletedHomework(
+                     It.IsAny<int>(),
+                     It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1598,7 +1597,7 @@ namespace TeachersService.Tests
             _SetupLessonExistsAsync(SetupKey.NotFound);
            
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.GetCompletedHomework(
+                await _teachersController.GetCompletedHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>()));
 
@@ -1613,7 +1612,7 @@ namespace TeachersService.Tests
             _SetupStudentExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.GetCompletedHomework(
+                await _teachersController.GetCompletedHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>()));
 
@@ -1629,7 +1628,7 @@ namespace TeachersService.Tests
             _SetupHomeworkExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.GetCompletedHomework(
+                await _teachersController.GetCompletedHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>()));
 
@@ -1646,7 +1645,7 @@ namespace TeachersService.Tests
             _SetupStudentInLessonExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.GetCompletedHomework(
+                await _teachersController.GetCompletedHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>()));
 
@@ -1664,9 +1663,9 @@ namespace TeachersService.Tests
             _SetupGetHomeworkProgressStatusAsync(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _teachersController.GetCompletedHomework(
-                 It.IsAny<int>(),
-                 It.IsAny<int>()));
+                await _teachersController.GetCompletedHomework(
+                    It.IsAny<int>(),
+                    It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1687,9 +1686,9 @@ namespace TeachersService.Tests
             _SetupGetHomeworkProgressStatusAsync(SetupKey.ReturnsValue, status);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-          await _teachersController.GetCompletedHomework(
-               It.IsAny<int>(),
-               It.IsAny<int>()));
+                await _teachersController.GetCompletedHomework(
+                   It.IsAny<int>(),
+                   It.IsAny<int>()));
 
             Assert.Multiple(() =>
             {
@@ -1712,9 +1711,9 @@ namespace TeachersService.Tests
             _SetupGetCompletedHomeworkByStudentInLessonId(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _teachersController.GetCompletedHomework(
-                 It.IsAny<int>(),
-                 It.IsAny<int>()));
+                await _teachersController.GetCompletedHomework(
+                     It.IsAny<int>(),
+                     It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -1732,9 +1731,9 @@ namespace TeachersService.Tests
             _SetupGetCompletedHomeworkByStudentInLessonId(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _teachersController.GetCompletedHomework(
-                 It.IsAny<int>(),
-                 It.IsAny<int>()));
+                await _teachersController.GetCompletedHomework(
+                     It.IsAny<int>(),
+                     It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.NotFound);
         }
@@ -1755,9 +1754,9 @@ namespace TeachersService.Tests
             _SetupGetCompletedHomeworkByStudentInLessonId(SetupKey.ReturnsValue, completedHomework);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-            await _teachersController.GetCompletedHomework(
-                 It.IsAny<int>(),
-                 It.IsAny<int>()));
+                await _teachersController.GetCompletedHomework(
+                     It.IsAny<int>(),
+                     It.IsAny<int>()));
 
             Assert.Multiple(() =>
             {
@@ -1900,7 +1899,7 @@ namespace TeachersService.Tests
             _SetupLessonExistsAsync(SetupKey.NotFound);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-               await _teachersController.GradeHomework(
+                await _teachersController.GradeHomework(
                    It.IsAny<int>(),
                    It.IsAny<int>(),
                    It.IsAny<int>()));
@@ -1973,10 +1972,8 @@ namespace TeachersService.Tests
             _SetupGetHomeworkProgressStatusAsync(SetupKey.ReturnsValue);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-              await _teachersController.GradeHomework(
-                  It.IsAny<int>(),
-                  It.IsAny<int>(),
-                  grade));
+                await _teachersController.GradeHomework(
+                    It.IsAny<int>(), It.IsAny<int>(), grade));
 
             Assert.Multiple(() =>
             {
@@ -1997,9 +1994,7 @@ namespace TeachersService.Tests
             _SetupGetHomeworkProgressStatusAsync(SetupKey.ReturnsValue);
 
             var result = await _teachersController.GradeHomework(
-                  It.IsAny<int>(),
-                  It.IsAny<int>(),
-                  grade);
+                  It.IsAny<int>(), It.IsAny<int>(), grade);
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -2036,9 +2031,7 @@ namespace TeachersService.Tests
             _SetupGetHomeworkProgressStatusAsync(SetupKey.ReturnsValue);
 
             var result = await _teachersController.GradeHomework(
-                              It.IsAny<int>(),
-                              It.IsAny<int>(),
-                              FakeData.ValidGrades[0]);
+                It.IsAny<int>(), It.IsAny<int>(), FakeData.ValidGrades[0]);
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -2054,9 +2047,7 @@ namespace TeachersService.Tests
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
                 await _teachersController.CreateComment(
-                    It.IsAny<int>(),
-                    It.IsAny<int>(),
-                    It.IsAny<string>()));
+                    It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -2070,9 +2061,7 @@ namespace TeachersService.Tests
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
                 await _teachersController.CreateComment(
-                    It.IsAny<int>(),
-                    It.IsAny<int>(),
-                    It.IsAny<string>()));
+                    It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -2189,9 +2178,7 @@ namespace TeachersService.Tests
             _SetupStudentInLessonExistsAsync(SetupKey.ReturnsValue);
 
             var result = await _teachersController.CreateComment(
-                            It.IsAny<int>(),
-                            It.IsAny<int>(),
-                            FakeData.Values.NotEmptyString);
+                It.IsAny<int>(), It.IsAny<int>(),FakeData.Values.NotEmptyString);
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -2360,9 +2347,7 @@ namespace TeachersService.Tests
             _SetupStudentInLessonExistsAsync(SetupKey.ReturnsValue);
 
             var result = await _teachersController.GradeStudentInLesson(
-                              It.IsAny<int>(),
-                              It.IsAny<int>(),
-                              FakeData.ValidGrades[0]);
+                It.IsAny<int>(), It.IsAny<int>(), FakeData.ValidGrades[0]);
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -2376,8 +2361,8 @@ namespace TeachersService.Tests
             _SetupTeacherParentMeetingExists(SetupKey.InternalServerError);
 
             var exception = Assert.ThrowsAsync<HttpStatusException>(async () =>
-             await _teachersController.RemoveTeacherParentMeeting(
-                 It.IsAny<int>()));
+                await _teachersController.RemoveTeacherParentMeeting(
+                    It.IsAny<int>()));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -2416,7 +2401,7 @@ namespace TeachersService.Tests
             _SetupTeacherParentMeetingExists(SetupKey.ReturnsValue);
 
             var result = await _teachersController.RemoveTeacherParentMeeting(
-                              It.IsAny<int>());
+                It.IsAny<int>());
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
