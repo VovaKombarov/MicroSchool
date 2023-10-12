@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TeacherApi.Data.Dtos;
 using TeacherApi.Models;
 
@@ -18,7 +15,7 @@ namespace TeacherApi.Tests.Utilities
 
         #endregion Nested
 
-        #region Constructors
+        #region Static Constructors
 
         static FakeData()
         {
@@ -28,17 +25,23 @@ namespace TeacherApi.Tests.Utilities
                "NotEmptyString");
         }
 
-        #endregion Constructors
+        #endregion Static Constructors
+
+        #region Static Fields 
+
+        public static int[] notValidGrades = { 0, 1, 6, 10 };
+
+        public static int[] validGrades = { 2, 3, 4, 5 };
+
+        #endregion Static Fields
 
         #region Properties
 
         public static TestData Values { get; set; }
 
-        public static int[] NotValidGrades = { 0, 1, 6, 10 };
-
-        public static int[] ValidGrades = { 2, 3, 4, 5 };
-
         #endregion Properties
+
+        #region Static Methods
 
         public static List<StudentReadDto> GetStudentsReadDto(
            List<Student> students)
@@ -74,7 +77,6 @@ namespace TeacherApi.Tests.Utilities
                 }
             };
         }
-
 
         public static List<Parent> GetParents()
         {
@@ -128,4 +130,6 @@ namespace TeacherApi.Tests.Utilities
             };
         }
     }
+
+    #endregion Static Methods
 }

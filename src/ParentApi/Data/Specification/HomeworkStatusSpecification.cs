@@ -10,7 +10,7 @@ namespace ParentApi.Data.Specifications
         /// <summary>
         /// Получает статус домашней работы по идентификатору.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">Идентификатор статуса домашней работы.</param>
         public HomeworkStatusSpecification(int id) : base(w => w.Id ==  id) 
         {
 

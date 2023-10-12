@@ -213,7 +213,6 @@ namespace IdentityApi.Services
             return true;
         }
 
-
         /// <summary>
         /// Получение токена из заголовков запроса.
         /// </summary>

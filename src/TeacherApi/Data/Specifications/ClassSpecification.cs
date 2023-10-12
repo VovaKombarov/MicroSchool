@@ -19,6 +19,5 @@ namespace TeacherApi.Data.Specifications
         }
 
         #endregion Constructors
-
     }
 }

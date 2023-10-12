@@ -60,7 +60,7 @@ namespace ParentApi.Data.Specifications
         /// <summary>
         /// Добавляет связанные данные.
         /// </summary>
-        /// <param name="includeExpression"></param>
+        /// <param name="includeExpression">Выражение добавляющее связанные данные.</param>
         protected void AddInclude(Expression<Func<T, object>> includeExpression)
         {
             Includes.Add(includeExpression);
@@ -69,7 +69,7 @@ namespace ParentApi.Data.Specifications
         /// <summary>
         /// Добавляет выражение, которое упорядочивает по возрастанию.
         /// </summary>
-        /// <param name="orderByExpression"></param>
+        /// <param name="orderByExpression">Выражение добавляющее упорядочивание по возрастанию.</param>
         protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
         {
             OrderBy = orderByExpression;
@@ -78,7 +78,7 @@ namespace ParentApi.Data.Specifications
         /// <summary>
         /// Добавляет выражение, которое упорядочивает по убыванию.
         /// </summary>
-        /// <param name="orderByDescExpression"></param>
+        /// <param name="orderByDescExpression">Выражение добавляющее упорядочивание по убыванию.</param>
         protected void AddOrderByDescending(Expression<Func<T, object>> orderByDescExpression)
         {
             OrderByDescending = orderByDescExpression;

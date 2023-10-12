@@ -51,7 +51,9 @@ namespace ParentApi.Controllers
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
             var exception = context?.Error;
 
-            HttpStatusException httpStatusException = exception as HttpStatusException;
+            HttpStatusException httpStatusException = 
+                exception as HttpStatusException;
+
             if (httpStatusException != null)
             {
                 return _ErrorResponseOnHttpStatusException(httpStatusException);

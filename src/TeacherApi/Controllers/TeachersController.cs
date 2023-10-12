@@ -244,7 +244,7 @@ namespace TeacherApi.Controllers
         /// <param name="subjectId">Идентификатор предмета.</param>
         /// <param name="theme">Тема урока.</param>
         /// <param name="lessonDateTime">Время урока.</param>
-        /// <returns></returns>
+        /// <returns>Результат выполнения операции.</returns>
         /// <remarks>
         /// Создает урок по идентификатору учителя, по идентификатору класса и идентификатору предмета.
         /// Тема урока не должна быть пустой.

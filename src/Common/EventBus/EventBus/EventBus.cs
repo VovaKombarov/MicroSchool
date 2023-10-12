@@ -129,7 +129,7 @@ namespace Common.EventBus
         /// Проверить данные конфигурации.
         /// </summary>
         /// <param name="propertyName">Имя свойства, которое проверяем в конфигурации.</param>
-        /// <exception cref="Exception">Исключение, если свойсство равно null или пустой строке.</exception>
+        /// <exception cref="Exception">Исключение, если свойство равно null или пустой строке.</exception>
         private void  _CheckConfigurationData(string propertyName)
         {
             if (string.IsNullOrEmpty(_configuration[propertyName]))
@@ -174,15 +174,16 @@ namespace Common.EventBus
             _channel.ExchangeDeclare(
                 exchange: EXCHANGE_NAME, type: ExchangeType.Direct);
 
-            _channel.CallbackException += _channel_CallbackException;
+            _channel.CallbackException += _СhannelCallbackException;
         }
 
         /// <summary>
         /// Обработчик события CallbackException в канале.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="ex"></param>
-        private void _channel_CallbackException(object? sender, CallbackExceptionEventArgs ex)
+        /// <param name="sender">Отправитель.</param>
+        /// <param name="ex">Исключение.</param>
+        private void _СhannelCallbackException(
+            object? sender, CallbackExceptionEventArgs ex)
         {
             _logger.LogWarning(ex.Exception, "Пересоздаем канал");
             _channel.Dispose();
@@ -263,15 +264,17 @@ namespace Common.EventBus
 
                 Type concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);
 
-                // Переключаем контекст и гарантируем, что оставшаяся часть метода выполниться в текущем контексте синхронизации
+                // Переключаем контекст и гарантируем,
+                // что оставшаяся часть метода выполниться в текущем контексте синхронизации
                 await Task.Yield();
-                await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent });
+                await (Task)concreteType.GetMethod("Handle")
+                    .Invoke(handler, new object[] { integrationEvent });
 
             }
             catch (Exception ex)
             {
-                _logger.LogError(
-                    $"Ошибка при выполнении метода Handle {eventType} {eventHadlerType} ", ex);
+                _logger.LogError($"Ошибка при выполнении метода Handle " +
+                    $"{eventType} {eventHadlerType} ", ex);
             }
         }
 

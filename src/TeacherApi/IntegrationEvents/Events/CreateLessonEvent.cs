@@ -59,7 +59,6 @@ namespace TeacherApi.IntegrationEvents.Events
            string theme,
            DateTime lessonDateTime)
         {
-
             TeacherId = teacherId;
             ClassId = classId;
             SubjectId = subjectId;

@@ -181,7 +181,7 @@ namespace ParentApi.Controllers
         public async Task<ActionResult<int>> GetGrade(
             int studentId, int lessonId)
         {
-          await Invoker.InvokeAsync(
+           await Invoker.InvokeAsync(
                _parentService.StudentExistsAsync(studentId));
 
             await Invoker.InvokeAsync(

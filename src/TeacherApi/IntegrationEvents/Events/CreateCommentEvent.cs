@@ -47,6 +47,5 @@ namespace TeacherApi.IntegrationEvents.Events
         }
 
         #endregion Constructors
-
     }
 }

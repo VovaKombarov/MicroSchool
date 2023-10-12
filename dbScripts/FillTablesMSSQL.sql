@@ -1,4 +1,4 @@
-﻿/* Заполнение справочных таблиц PostgreSQL */
+﻿/* Заполнение справочных таблиц в MSSQL */
 
 -- Вставляем классы
 INSERT INTO skool.Classes(Number, Letter) 

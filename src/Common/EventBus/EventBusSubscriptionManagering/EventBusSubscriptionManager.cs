@@ -1,7 +1,7 @@
 ﻿namespace Common.EventBus
 {
     /// <summary>
-    /// Класс управляет подписками/отписками событий интеграции на необходимые обрработчики.
+    /// Класс управляет подписками/отписками событий интеграции на необходимые обработчики.
     /// </summary>
     public class EventBusSubscriptionManager : IEventBusSubscriptionManager
     {

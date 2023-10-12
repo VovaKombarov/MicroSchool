@@ -13,16 +13,12 @@ namespace Common.Api
     /// </summary>
     public static class Invoker
     {
-        #region Fields
+        #region Static
 
         /// <summary>
         /// Обьект логгера.
         /// </summary>
         private static ILogger _logger;
-
-        #endregion Fields
-
-        #region Methods
 
         /// <summary>
         /// Инициализация логгера.
@@ -33,11 +29,15 @@ namespace Common.Api
             _logger = logger;
         }
 
+        #endregion Static
+
+        #region Methods
+
         /// <summary>
         /// Асинхронное выполнение метода.
         /// </summary>
         /// <param name="task">Асинхронная операция.</param>
-        /// <returns></returns>
+        /// <returns>Результат выполнения операции.</returns>
         /// <exception cref="HttpStatusException">Необходимое исключение в случае ошибки.</exception>
         public static async Task InvokeAsync(Task task)
         {
@@ -56,7 +56,7 @@ namespace Common.Api
         /// <summary>
         /// Асинхронное выполнение метода.
         /// </summary>
-        /// <typeparam name="T">Обощенный тип результата.</typeparam>
+        /// <typeparam name="T">Обобщенный тип результата.</typeparam>
         /// <param name="task">Асинхронная операция.</param>
         /// <returns>Результат выполнение асинхронной операции.</returns>
         /// <exception cref="HttpStatusException">Необходимое исключение в случае ошибки.</exception>
@@ -87,7 +87,7 @@ namespace Common.Api
         /// </summary>
         /// <typeparam name="T">Обобщенный тип результата.</typeparam>
         /// <param name="task">Асинхронная операция.</param>
-        /// <returns></returns>
+        /// <returns>Результат выполнения операции.</returns>
         /// <exception cref="HttpStatusException">Необходимое исключение в случае ошибки.</exception>
         public static async Task<T> InvokeWithoutCheckResultAsync<T>(
             Task<T> task)

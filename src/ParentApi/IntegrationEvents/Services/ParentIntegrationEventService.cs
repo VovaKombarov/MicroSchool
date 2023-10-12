@@ -360,7 +360,6 @@ namespace ParentApi.IntegrationEvents.Services
                 CompletedHomework completedHomework = await _completedHomeworkRepo
                     .GetItemAsync(new CompletedHomeworkSpecification(studentInLesson.Id));
 
-
                 completedHomework.Grade = @event.Grade;
                 _completedHomeworkRepo.Update(completedHomework);
 

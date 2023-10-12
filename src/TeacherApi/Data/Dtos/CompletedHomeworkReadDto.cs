@@ -1,7 +1,7 @@
 ﻿namespace TeacherApi.Data.Dtos
 {
     /// <summary>
-    /// Готовая работа.
+    /// Готовая домашняя работа.
     /// </summary>
     public record CompletedHomeworkReadDto
     {

@@ -10,7 +10,7 @@ namespace TeacherApi.Data.Dtos
         #region Fields 
 
         /// <summary>
-        /// День рождения.
+        /// Дата рождения.
         /// </summary>
         private string _birthDate;
 
@@ -34,7 +34,7 @@ namespace TeacherApi.Data.Dtos
         public string Surname { get; init; }
 
         /// <summary>
-        /// День рождения.
+        /// Дата рождения.
         /// </summary>
         public string BirthDate
         {

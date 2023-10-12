@@ -10,7 +10,7 @@ namespace ParentApi.Data.Specifications
         /// <summary>
         /// Получает урок по идентификатору урока.
         /// </summary>
-        /// <param name="lessonId"></param>
+        /// <param name="lessonId">Идентификатор урока.</param>
         public LessonSpecification(int lessonId) : base(w => w.Id == lessonId)
         { 
 

@@ -17,7 +17,7 @@ namespace ParentApi.IntegrationEvents.Events
         /// <summary>
         /// Идентификатор встречи учителя и родителя.
         /// </summary>
-        public int TeacherParentMeetingId { get;}
+        public int TeacherParentMeetingId { get; }
 
         #endregion Properties
 

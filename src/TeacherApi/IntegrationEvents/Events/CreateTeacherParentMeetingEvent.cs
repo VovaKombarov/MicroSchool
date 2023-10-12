@@ -46,7 +46,8 @@ namespace TeacherApi.IntegrationEvents
         /// <param name="parentId">Идентификатор родителя.</param>
         /// <param name="studentId">Идентификатор студента.</param>
         /// <param name="meetingDT">Время митинга.</param>
-        public CreateTeacherParentMeetingEvent(int teacherId, int parentId, int studentId, DateTime meetingDT)
+        public CreateTeacherParentMeetingEvent(
+            int teacherId, int parentId, int studentId, DateTime meetingDT)
         {
             TeacherId = teacherId;
             ParentId = parentId;

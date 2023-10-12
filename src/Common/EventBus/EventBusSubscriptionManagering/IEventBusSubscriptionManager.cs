@@ -35,7 +35,7 @@
         /// <summary>
         /// Получает тип обработчика событий интеграции по имени события интеграции.
         /// </summary>
-        /// <param name="eventName"></param>
+        /// <param name="eventName">Имя события интеграции.</param>
         /// <returns>Тип обработчика событий по имени события интеграции.</returns>
         Type GetEventHandlerTypeByName(string eventName);
 

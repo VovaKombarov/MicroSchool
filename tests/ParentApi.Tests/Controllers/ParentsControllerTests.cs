@@ -106,10 +106,8 @@ namespace ParentApi.Tests.Controllers
             else
             {
                 _parentService.Setup(w => w.RemoveParentTeacherMeetingAsync(
-                    It.IsAny<int>())).Returns(Task.FromResult(0));
-                    
+                    It.IsAny<int>())).Returns(Task.FromResult(0));  
             }
-
         }
 
         private void _SetupAddTeacherParentMeetingAsync(SetupKey setupKey)

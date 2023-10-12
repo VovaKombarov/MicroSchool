@@ -131,7 +131,6 @@ namespace TeachersService.Tests
                    .Throws(new HttpStatusException(
                        _GetHttpStatusCodeBySetupKey(setupKey)));
             }
-
         }
 
         private void _SetupSubjectExistsAsync(SetupKey setupKey)
@@ -1962,7 +1961,7 @@ namespace TeachersService.Tests
         }
 
         [Category(TestCategory.BAD_REQUEST)]
-        [Test, TestCaseSource(typeof(FakeData), nameof(FakeData.NotValidGrades))]
+        [Test, TestCaseSource(typeof(FakeData), nameof(FakeData.notValidGrades))]
         public void GradeHomework_IncorrectGradeValue_ReturnsBadRequest(int grade)
         {
             _SetupStudentExistsAsync(SetupKey.ReturnsValue);
@@ -1984,7 +1983,7 @@ namespace TeachersService.Tests
         }
 
         [Category(TestCategory.BAD_REQUEST)]
-        [Test, TestCaseSource(typeof(FakeData), nameof(FakeData.ValidGrades))]
+        [Test, TestCaseSource(typeof(FakeData), nameof(FakeData.validGrades))]
         public async Task GradeHomework_CorrectGradeValue_ReturnsOk(int grade)
         {
             _SetupStudentExistsAsync(SetupKey.ReturnsValue);
@@ -2016,7 +2015,7 @@ namespace TeachersService.Tests
               await _teachersController.GradeHomework(
                   It.IsAny<int>(),
                   It.IsAny<int>(),
-                  FakeData.ValidGrades[0]));
+                  FakeData.validGrades[0]));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -2031,7 +2030,7 @@ namespace TeachersService.Tests
             _SetupGetHomeworkProgressStatusAsync(SetupKey.ReturnsValue);
 
             var result = await _teachersController.GradeHomework(
-                It.IsAny<int>(), It.IsAny<int>(), FakeData.ValidGrades[0]);
+                It.IsAny<int>(), It.IsAny<int>(), FakeData.validGrades[0]);
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 
@@ -2282,7 +2281,7 @@ namespace TeachersService.Tests
         }
 
         [Category(TestCategory.BAD_REQUEST)]
-        [Test, TestCaseSource(typeof(FakeData), nameof(FakeData.NotValidGrades))]
+        [Test, TestCaseSource(typeof(FakeData), nameof(FakeData.notValidGrades))]
         public void GradeStudentInLesson_IncorrectGradeValue_ReturnsBadRequest(int grade)
         {
             _SetupStudentExistsAsync(SetupKey.ReturnsValue);
@@ -2304,7 +2303,7 @@ namespace TeachersService.Tests
         }
 
         [Category(TestCategory.BAD_REQUEST)]
-        [Test, TestCaseSource(typeof(FakeData), nameof(FakeData.ValidGrades))]
+        [Test, TestCaseSource(typeof(FakeData), nameof(FakeData.validGrades))]
         public async Task GradeStudentInLesson_CorrectGradeValue_ReturnsOk(int grade)
         {
             _SetupStudentExistsAsync(SetupKey.ReturnsValue);
@@ -2334,7 +2333,7 @@ namespace TeachersService.Tests
               await _teachersController.GradeStudentInLesson(
                   It.IsAny<int>(),
                   It.IsAny<int>(),
-                  FakeData.ValidGrades[0]));
+                  FakeData.validGrades[0]));
 
             Assert.AreEqual(exception.Status, HttpStatusCode.InternalServerError);
         }
@@ -2347,7 +2346,7 @@ namespace TeachersService.Tests
             _SetupStudentInLessonExistsAsync(SetupKey.ReturnsValue);
 
             var result = await _teachersController.GradeStudentInLesson(
-                It.IsAny<int>(), It.IsAny<int>(), FakeData.ValidGrades[0]);
+                It.IsAny<int>(), It.IsAny<int>(), FakeData.validGrades[0]);
 
             var statusCode = ActionResultConverter.GetStatusCode(result);
 

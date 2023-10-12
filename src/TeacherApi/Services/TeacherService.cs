@@ -524,8 +524,8 @@ namespace TeacherApi.Services
         /// <summary>
         /// Асинхронное добавление домашней работы.
         /// </summary>
-        /// <param name="lessonId"><Идентификатор урока./param>
-        /// <param name="finishDateTime">Время окончания урок</param>
+        /// <param name="lessonId">Идентификатор урока.</param>
+        /// <param name="finishDateTime">Время окончания урока.</param>
         /// <param name="homeWork">Домашняя работа.</param>
         /// <returns>Результат выполнения операции.</returns>
         public async Task AddHomeworkAsync(
@@ -660,7 +660,8 @@ namespace TeacherApi.Services
         /// <param name="lessonId">Идентификатор урока.</param>
         /// <param name="grade">Оценка.</param>
         /// <returns>Результат выполнения операции.</returns>
-        public async Task UpdateGradeHomeworkAsync(int studentId, int lessonId, int grade)
+        public async Task UpdateGradeHomeworkAsync(
+            int studentId, int lessonId, int grade)
         {
             Student student;
             Lesson lesson;
